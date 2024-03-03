@@ -1,3 +1,5 @@
+import CryptoJS from 'crypto-js';
+
 //GENERAL
 const get_cookie = (index) => {
 
@@ -49,7 +51,24 @@ return true;
 
 }
 
-export { get_cookie, set_cookie };
+const encrypt = (data, password) => {
+
+  let en = CryptoJS.AES.encrypt(data, password);
+
+  return en;
+
+}
+
+const decrypt = (encrypted_code, password) => {
+
+  let encrypted = CryptoJS.AES.decrypt(encrypted_code, password); 
+
+  let response = encrypted.toString(CryptoJS.enc.Utf8);
+
+  return response;
+}
+
+export { get_cookie, set_cookie, encrypt, decrypt };
 
 //OTHERS APIS
 const get_ip = async () => {
@@ -74,7 +93,10 @@ const get_ip = async () => {
 export { get_ip };
 
 //API LARAVEL
-const register_user = async (raw_ip, raw_address, raw_country, raw_loc) => {
+
+const imaginenote_api = {
+
+  async register_user (raw_email, raw_phone, raw_ip, raw_address, raw_country, raw_loc) {
     try {
   
       const response = await fetch('http://127.0.0.1:8000/api/user/register', {
@@ -85,6 +107,8 @@ const register_user = async (raw_ip, raw_address, raw_country, raw_loc) => {
         },
         mode: 'cors',
         body: JSON.stringify({
+          email: raw_email,
+          phone: raw_phone,
           ip: raw_ip,
           address: raw_address,
           country: raw_country,
@@ -103,49 +127,51 @@ const register_user = async (raw_ip, raw_address, raw_country, raw_loc) => {
       console.error(error);
       return false;
     }
-};
+  },
 
-const login_user = async(raw_ip) => {
+  async login_user (raw_ip){
 
-try {
+  try {
 
     const response = await fetch('http://127.0.0.1:8000/api/login',
     {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    mode: 'cors',
-    body: JSON.stringify({
-        ip: raw_ip
-    })
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      mode: 'cors',
+      body: JSON.stringify({
+          ip: raw_ip
+      })
     }
     ).then(data => data.text());
 
     return response;
 
-} catch (error) {
-    console.error(error);
-}
+    } catch (error) {
+      console.error(error);
+    }
 
-};
+  },
 
-const user_tablatures = async(raw_ip) => {
+  async user_notes(raw_ip) {
 
-  try {
+    try {
   
-    const response = await fetch('http://127.0.0.1:8000/api/guitar/' + raw_ip, {
-      method: 'GET'
-    }).then(data => data.json());
-  
-    return response;
+      const response = await fetch('http://127.0.0.1:8000/api/note/' + raw_ip, {
+        method: 'GET'
+      }).then(data => data.json());
+    
+      return response;
 
-  } catch (error) {
+    } catch (error) {
 
-    console.error(error);
+      console.error(error);
+
+    }
 
   }
 
-};
+}
 
-export {register_user, login_user, user_tablatures};
+export {imaginenote_api};

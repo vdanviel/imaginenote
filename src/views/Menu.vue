@@ -2,7 +2,7 @@
     <section v-if="workplaces" class="text-gray-600 body-font">
         <div class="container px-5 py-24 mx-auto">
             <div class="flex flex-col text-center w-full mb-20">
-                <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">O seu guia para músicas</h1>
+                <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Anote tudo que pensa.</h1>
                 <p class="lg:w-2/3 mx-auto leading-relaxed text-base">Whatever cardigan tote bag tumblr hexagon brooklyn asymmetrical gentrify, subway tile poke farm-to-table. Franzen you probably haven't heard of them.</p>
             </div>
             <div class="flex flex-wrap -m-2">
@@ -54,9 +54,8 @@
 
 <script setup>
 
-    import CryptoJS from 'crypto-js';
     import { ref } from 'vue';
-    import { get_cookie, get_ip, login_user, user_tablatures } from "../utils/functions.js";
+    import { get_cookie, get_ip, login_user, user_notes, decrypt } from "../utils/functions.js";
 
     let ip = get_ip();
 
@@ -67,14 +66,12 @@
         login_user(data.ip).then(login => {
 
             if (login == false) {
-                workplaces.value = false;
+                return workplaces.value = false;
             }
 
-            let encrypted = CryptoJS.AES.decrypt(get_cookie('user'), JSON.parse(login).token); 
+            let user = decrypt(get_cookie('user'), JSON.parse(login).token);
 
-            let user = encrypted.toString(CryptoJS.enc.Utf8);
-
-            user_tablatures(JSON.parse(user).id).then(guitars => {
+            user_notes(JSON.parse(user).id).then(guitars => {
 
                 workplaces.value = guitars;
 
