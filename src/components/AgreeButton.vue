@@ -5,23 +5,17 @@
 </template>
 
 <script setup>
+  import { utils } from "../utils/functions.js";
 
-  import { register_user, login_user, get_ip, set_cookie, encrypt } from "../utils/functions.js";
-  import { useRouter } from "vue-router";
   //recuperando metodos do App.vue, e instanciando eles nessas consts (vatraiveis) com defineProps()..
   const {phone, msg, email} = defineProps(['email' ,'phone', 'msg']);//defineProps() - define props que vem do pai na <ChamadoDoComponente prop="value"/>
 
   //instanciando os eventos emits do componente pai..
-  //const emit = defineEmits(['agreed']);
+  const emit = defineEmits(['agreed']);
 
   const handle_click = () => {
     
     accept_cookie();
-
-    //chamando evento emit 'agreed_cookie'..
-    //emit('agreed')
-
-    useRouter().push({name:'menu'})
 
   }
 
@@ -29,19 +23,31 @@
   const accept_cookie = async () => {
 
     //chamando promisse do ip..
-    const ip_info = get_ip();
+    const ip_info = utils.services.get_ip();
     
     //utilizando o 'data' para definir as informações do usuario registrado / logado..
     ip_info.then(data => {
 
-      //let info = {ip: data.ip, address: data.city, country: data.country, local: data.loc};//criando objeto com informações do user..
+      //registrando o user (será enviado o email para ele)
+      let register = utils.imaginenote_api.register_user(email, phone, data.ip, data.city, data.country, data.loc);
 
-      register_user(email, phone, data.ip, data.city, data.country, data.loc);//registrando o user (se já registrado não ocorrerá ação e retornará false)
+      //chamando evento emit 'agreed_cookie'..
+      register.then(data => {
 
-      let login = login_user(data.ip);//logando com o ip do usuário..
+        //convertendo json string para json objeto..
+        let obj = JSON.parse(data);
 
-      login.then(data => set_cookie('user', encrypt(data, data.token), 5));//definindo o cookie com as informações do usuário, e crytografando
+        //se existir um erro retorna false..
+        if (obj.error) {
+          return false;
+        }else{
+          //se não é emitido o evento agreed, que aciona a func de aviso de envio de email mail_warning...
+          emit('agreed')
+          return true;
+        }
 
+      })
+      
     });
 
     

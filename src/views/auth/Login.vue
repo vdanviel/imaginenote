@@ -4,6 +4,8 @@
         Seja bem-vindo ao ImagineNote, para começarmos, por favor preencha as informações. Elas serão salvas em nosso sistema.
       </p>
 
+    <WarningAlert tittle="Email enviado." desc="Enviamos um email para você com seu acesso." v-show="mailed"/>
+
     <div>
       <label for="phone">Email
         <input type="email" id="email" v-model="email" class="w-full p-2 mb-2 border border-gray-300 rounded focus:outline-none focus:border-indigo-500">
@@ -16,16 +18,19 @@
 
       <!-- @agreed="close" é um emit. Emit somente funcionam DENTRO DE SEU COMPONENTE PAI. -->
       <!--<AgreeButton @agreed="close" :phone="phone" msg="Começar"/>-->
-      <AgreeButton :email="email" :phone="phone" msg="Começar"/>
+      <AgreeButton @agreed="mail_warning" :email="email" :phone="phone" msg="Começar"/>
+
     </div>
 </template>
 
 <script setup>
 
   import AgreeButton from "../../components/AgreeButton.vue";
+  import WarningAlert from "../../components/alerts/WarningAlert.vue";
 
-  const phone = null;
-  const email = null;
+  let phone = null;
+  let email = null;
+  let mailed = null;
 
   const mask_phone = (event, reative) => {
 
@@ -64,6 +69,12 @@
       mask_phone(e, phone);  
     
   };
+
+  const mail_warning = () => {
+
+    mailed = true;
+
+  }
 
 
 </script>
