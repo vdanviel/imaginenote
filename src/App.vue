@@ -1,6 +1,6 @@
 <template>
 
-  <body class="mx-[10px]">
+  <body class="mx-[10px] lg:mx-[100px]">
     
     <header>
       <nav class="flex flex-col items-center w-full shadow rounded-b-[16px] p-[10px]">

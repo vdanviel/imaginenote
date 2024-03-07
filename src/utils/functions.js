@@ -101,9 +101,9 @@ const utils = {
   //API LARAVEL
   imaginenote_api: {
 
-    async register_user (raw_email, raw_phone, raw_ip, raw_address, raw_country, raw_loc) {
+    async register_user (raw_email, raw_ip, raw_address, raw_country, raw_loc) {
       try {
-    
+
         const response = await fetch('http://127.0.0.1:8000/api/user/enter', {
           method: 'POST',
           headers: {
@@ -113,7 +113,6 @@ const utils = {
           mode: 'cors',
           body: JSON.stringify({
             email: raw_email,
-            phone: raw_phone,
             ip: raw_ip,
             address: raw_address,
             country: raw_country,
@@ -122,11 +121,7 @@ const utils = {
         }).
         then(data => data.text());
     
-        if (response == 1 || response == true) {
-          return true;
-        }else{
-          return false;
-        }
+        return response;
     
       } catch (error) {
         console.error(error);
@@ -151,7 +146,7 @@ const utils = {
       }
       ).then(data => data.text());
 
-      return response;
+        return response;
 
       } catch (error) {
         console.error(error);
