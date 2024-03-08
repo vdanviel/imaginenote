@@ -15,7 +15,7 @@
   const prop = defineProps(['email', 'msg']);
 
   //criando eventos para serem acionados pelo componente pai..
-  const emit = defineEmits(['agreed']);
+  const emit = defineEmits(['agreed','loading', 'disagreed']);
   
   //declarando vars do alerta de erro..
   const state = reactive({
@@ -25,6 +25,7 @@
 
   const handle_click = () => {
     
+    emit('loading');
     accept_cookie();
     
   }
@@ -50,21 +51,30 @@
 
         console.log(json);
 
+        if(data == false){
+          state.error = "Houve um erro de conexão."
+          state.show = true;
+          emit('disagreed');
+        }
+
         if (json.error) {
-          //O método Object.values(meuObjeto) retorna um array com os valores do objeto
+
           if(typeof json.error.validator != 'undefined'){
+            //O método Object.values(meuObjeto) retorna um array com os valores do objeto
             state.error = Object.values(json.error.validator.customMessages)[0];
           }else{
-            state.error = Object.values(json.error);
+            state.error = json.error;
           }
 
+          emit('disagreed');
           state.show = true;
-        }else{
-          // eslint-disable-next-line vue/no-mutating-props
-          prop.email = '';
-          state.show = false;
-          emit('agreed');
         }
+
+        
+      if (typeof json.new_user != 'undefined' || typeof json.existing_user != 'undefined') {
+        state.show = false;
+        emit('agreed');
+      }
 
       })
 

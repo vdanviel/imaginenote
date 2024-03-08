@@ -18,7 +18,9 @@
 
       <!-- @agreed="close" é um emit. Emit somente funcionam DENTRO DE SEU COMPONENTE PAI. -->
       <!--<AgreeButton @agreed="close" :phone="phone" msg="Começar"/>-->
-      <AgreeButton @agreed="agreed_callback" :email="email" :phone="phone" msg="Enviar"/>
+      <Loading v-show="loading"/>
+      <AgreeButton @loading="show_loading" @disagreed="disagreed_callback" @agreed="agreed_callback" :email="email" msg="Enviar"/>
+      
 
     </div>
 
@@ -28,12 +30,13 @@
 
   import AgreeButton from "../../components/AgreeButton.vue";
   import WarningAlert from "../../components/alerts/WarningAlert.vue";
+  import Loading from "../../components/Loading.vue";
   import { ref } from "vue";
 
   //ref() - consegue recuperar dados de v-models..
-  let phone = ref();
   let email = ref();
   let mailed = ref(null);
+  let loading = ref(false);
 
 /*   const mask_phone = (event, reative) => {
 
@@ -71,9 +74,24 @@
   }; */
 
 
+  const show_loading = () => {
+
+    loading.value = true;
+
+  }
+
   const agreed_callback = () => {
 
+    loading.value = false;
     mailed.value = true;
+    
+
+  }
+
+  const disagreed_callback = () => {
+
+    loading.value = false;
+    
 
   }
 
