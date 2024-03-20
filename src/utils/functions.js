@@ -129,20 +129,20 @@ const utils = {
       }
     },
 
-    async login_user (raw_ip, token){
+    async login_user (raw_pin){
 
     try {
 
-      const response = await fetch('http://127.0.0.1:8000/api/enter/validate/' + token,
+      const response = await fetch('http://127.0.0.1:8000/api/enter/validate',
       {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        mode: 'cors',
         body: JSON.stringify({
-            ip: raw_ip
-        })
+          pin: raw_pin
+        }),
+        mode: 'cors'
       }
       ).then(data => data.text());
 
@@ -150,6 +150,24 @@ const utils = {
 
       } catch (error) {
         console.error(error);
+      }
+
+    },
+
+    async get_user_data(raw_token) {
+
+      try {
+    
+        const response = await fetch('http://127.0.0.1:8000/api/data?token=' + raw_token, {
+          method: 'GET'
+        }).then(data => data.json());
+      
+        return response;
+
+      } catch (error) {
+
+        console.error(error);
+
       }
 
     },
@@ -172,7 +190,7 @@ const utils = {
 
     }
 
-  },
+  }
 
 }
 

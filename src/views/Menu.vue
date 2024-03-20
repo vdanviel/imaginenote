@@ -55,27 +55,15 @@
 <script setup>
 
     import { ref } from 'vue';
-    import { get_cookie, get_ip, login_user, user_notes, decrypt } from "../utils/functions.js";
+    import { utils } from "../utils/functions.js";
 
-    let ip = get_ip();
+    let ip = utils.services.get_ip();
 
     const workplaces = ref([]);
 
     ip.then(data => {
 
-        login_user(data.ip).then(login => {
-
-            if (login == false) {
-                return workplaces.value = false;
-            }
-
-            let user = decrypt(get_cookie('user'), JSON.parse(login).token);
-
-            user_notes(JSON.parse(user).id).then(guitars => {
-
-                workplaces.value = guitars;
-
-            })
+        utils.imaginenote_api.get_user_data(data.ip).then(data => {
 
         })
 

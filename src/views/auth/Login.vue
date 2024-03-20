@@ -4,7 +4,7 @@
         Seja bem-vindo ao ImagineNote, para começarmos, por favor insira seu e-mail. Será enviado um e-mail de acesso para você e seus dados serão salvos em nosso sistema.
       </p>
 
-      <WarningAlert tittle="Email enviado." desc="Enviamos um email para você com seu acesso." v-show="mailed"/>
+      <!--<<WarningAlert tittle="Email enviado." desc="Enviamos um email para você com seu acesso." v-show="mailed"/>-->
 
       <div class="flex flex-col">
         <label for="phone">Email</label>
@@ -17,9 +17,9 @@
       </div>
 
       <!-- @agreed="close" é um emit. Emit somente funcionam DENTRO DE SEU COMPONENTE PAI. -->
-      <!--<AgreeButton @agreed="close" :phone="phone" msg="Começar"/>-->
+      <!--<AgreeButton @agreed="agreed_callback" :phone="phone" msg="Começar"/>-->
       <Loading v-show="loading"/>
-      <AgreeButton @loading="show_loading" @disagreed="disagreed_callback" @agreed="agreed_callback" :email="email" msg="Enviar"/>
+      <AgreeButton @loading="show_loading" @disagreed="disagreed_callback" :email="email" msg="Enviar"/>
       
 
     </div>
@@ -29,13 +29,13 @@
 <script setup>
 
   import AgreeButton from "../../components/AgreeButton.vue";
-  import WarningAlert from "../../components/alerts/WarningAlert.vue";
+  //import WarningAlert from "../../components/alerts/WarningAlert.vue";
   import Loading from "../../components/Loading.vue";
   import { ref } from "vue";
 
   //ref() - consegue recuperar dados de v-models..
   let email = ref();
-  let mailed = ref(null);
+  //let mailed = ref(null);
   let loading = ref(false);
 
 /*   const mask_phone = (event, reative) => {
@@ -80,18 +80,17 @@
 
   }
 
-  const agreed_callback = () => {
+/*   const agreed_callback = () => {
 
     loading.value = false;
     mailed.value = true;
     
 
-  }
+  } */
 
   const disagreed_callback = () => {
 
     loading.value = false;
-    
 
   }
 

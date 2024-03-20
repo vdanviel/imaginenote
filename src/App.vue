@@ -37,20 +37,6 @@
 
 <script setup>
 
-  import { useRoute, useRouter } from "vue-router";
-  import { utils } from "./utils/functions.js";
-
-  const route = useRoute();
-  const router = useRouter();
-
-  //se usuario não estiver logado, ele sempre é puxado para pagina de login
-  if (utils.general.get_cookie('user') == false || route.path != '/login') {
-    
-    router.push({name:'login'});
-
-  }
-
-  //rotas em que não quero que header apareça
-  //if (route.path == '/login') {}
+  console.log("Acesse meu portfólio - vdanviel.github.io :)");
 
 </script>
