@@ -17,7 +17,7 @@ const router = createRouter({
       component: () => import('../views/auth/Login.vue')
     },
     {
-      path: '/pin',
+      path: '/verify',
       name: 'pin',
       component: () => import('../views/auth/Pin.vue')
     },
@@ -31,21 +31,22 @@ const router = createRouter({
 
 //gerenciamento de acesso de rotas
 router.beforeEach((to, from, next) => {
-  const isUserLoggedIn = utils.general.get_cookie('pass');
+  const isUserLoggedIn = utils.general.get_cookie('session');
 
   if (!isUserLoggedIn && to.name !== 'login') {
-
-    //rotas liberadas sem login..
-    if (to.name == 'pin') {
+    // Rotas liberadas sem login
+    if (to.name === 'pin') {
       next();
-    }else{
+    } else {
       next({ name: 'login' });
     }
-
-    
   } else {
-    //rotas que user n pode acessar logado..
-    next();    
+    // Rotas que usuário não pode acessar logado
+    if (to.name === 'pin') {
+      next({ name: 'menu' }); // Redireciona para outra rota, como 'menu'
+    } else {
+      next();    
+    }
   }
 });
 

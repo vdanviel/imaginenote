@@ -38,55 +38,11 @@
   //let mailed = ref(null);
   let loading = ref(false);
 
-/*   const mask_phone = (event, reative) => {
-
-    // Verifica se o usuário está apagando um caractere
-    if (event.inputType === 'deleteContentBackward' || event.inputType === 'deleteContentForward') {
-
-        //event.target.selectionStart: Este é um atributo que fornece a posição (o index) que o ponteiro está..
-        //let delete_index = event.target.selectionStart;
-        //charAt - é a posição atual q o ponteiro esta..
-
-        
-        //console.log(Object.getPrototypeOf(reative)); - vendo prototype de reative
-        //console.log(reative.slice(0, reative.length - 1));
-
-        event.target.value = event.target.value.slice(0, reative.length - 1);
-       
-    }
-
-    if (event.target.value.length == 2) {
-      event.target.value = `(${event.target.value})`;
-    }
-
-    if ((event.target.value.length - 2) == 6) {
-      event.target.value = `${event.target.value}-`;
-    }
-
-    // Atualize o valor da variável reativa phone
-    //reative.value = event.target.value;
-  };
-
-  const handle_login = (e) => {
-
-      mask_phone(e, phone);
-    
-  }; */
-
-
   const show_loading = () => {
 
     loading.value = true;
 
   }
-
-/*   const agreed_callback = () => {
-
-    loading.value = false;
-    mailed.value = true;
-    
-
-  } */
 
   const disagreed_callback = () => {
 

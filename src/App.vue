@@ -19,6 +19,14 @@
       <router-view/>
     </main>
 
+    <footer v-show="logged">
+      <div>
+        <button @click="logout" class="rounded-full shadow rounded-[100%] p-3 hover:bg-[#c6c6c6] focus:outline-none">
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g id="logout"><line class="cls-1" x1="15.92" x2="28.92" y1="16" y2="16"/><path d="M23.93,25v3h-16V4h16V7h2V3a1,1,0,0,0-1-1h-18a1,1,0,0,0-1,1V29a1,1,0,0,0,1,1h18a1,1,0,0,0,1-1V25Z"/><line class="cls-1" x1="28.92" x2="24.92" y1="16" y2="20"/><line class="cls-1" x1="28.92" x2="24.92" y1="16" y2="12"/><line class="cls-1" x1="24.92" x2="24.92" y1="8.09" y2="6.09"/><line class="cls-1" x1="24.92" x2="24.92" y1="26" y2="24"/></g></svg>
+        </button>
+      </div>
+    </footer>
+
   </body>
 
 </template>
@@ -37,6 +45,30 @@
 
 <script setup>
 
+  import { useRouter } from "vue-router";
+  import { ref } from "vue";
+  import { utils } from "./utils/functions.js";
+  import { onMounted } from "vue";
+
+
   console.log("Acesse meu portfólio - vdanviel.github.io :)");
+
+  const router = useRouter();
+  const logged = ref(false);
+
+  onMounted(() => {
+
+    if (utils.general.get_cookie('session') != false || typeof utils.general.get_cookie('session') != 'undefined') {
+    
+      logged.value = true;
+
+    }
+
+  });
+
+  const logout = () => {
+    utils.general.logout();
+    router.push({name:'login'});
+  }
 
 </script>

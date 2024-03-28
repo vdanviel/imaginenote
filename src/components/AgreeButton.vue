@@ -50,11 +50,7 @@
 
         emit('disagreed');
 
-        console.log(data);
-
-        let json = JSON.parse(data);
-
-        console.log(json);
+        let json = data;
 
         if(data == false){
           state.error = "Houve um erro de conexão."

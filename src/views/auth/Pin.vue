@@ -19,6 +19,8 @@
 
         <Loading v-show="loading"/>
 
+        <AttentionAlert :tittle="error_message" v-show="wrong_pin" class="mb-[10px]"/>
+
         <button @click="login" type="submit" class="bg-green-500 shadow hover:bg-green-600 text-white font-bold py-2 px-4 rounded cursor-pointer">Começar</button>
 
     </div>
@@ -30,15 +32,52 @@
     import { ref } from "vue";
     import { utils } from "../../utils/functions.js";
     import Loading from "../../components/Loading.vue";
+    import AttentionAlert from "../../components/alerts/AttentionAlert.vue";
+    import { useRouter } from "vue-router";
 
+    //vars do template
     const pin = ref();
-    const loading = ref();
+    const loading = ref(false);
+    const wrong_pin = ref(false)
+    const error_message = ref(null);
 
+    //metodos do vue
+    const router = useRouter();
+
+    //função do componente atual..
     const login = () => {
         
-        utils.imaginenote_api.login_user(pin).then(data => {
+        loading.value = true;
+
+        utils.imaginenote_api.login_user(pin.value).then(data => {
 
             console.log(data);
+            console.log(utils.general.get_cookie('session'));
+            
+
+            //em casos de erros exibe o erro da api..
+            if (data.error) {
+
+                loading.value = false;
+                wrong_pin.value = true;
+
+                error_message.value = typeof data.error.pin != 'undefined' ? data.error.pin[0] : (data.error == 'absent_token' ? 'Código de acesso inexistente.' : (data.error == 'expired_token' ? 'Código de acesso expirado.' : 'Código de acesso inválido.'));
+
+            }else if (data.user) {//em sucesso salva o token do user e manda ele para o menu
+                wrong_pin.value = false;
+                loading.value = false;
+                console.log(data.user);
+                utils.general.set_cookie('session', data.user, 30);
+                                console.log(utils.general.get_cookie('session'));
+                //router.push({name:'menu', query:{new:true}});
+            }else{
+
+                loading.value = false;
+                wrong_pin.value = true;
+                error_message.value = "Algo deu errado.";
+
+            }
+            
 
         })
 

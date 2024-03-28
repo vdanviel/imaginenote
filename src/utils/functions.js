@@ -41,16 +41,16 @@ const utils = {
       
     set_cookie (name, value, days){
         
-    //definindo tempo
-    let time = new Date();
-    
-    //definindo o tempo valido do cookie que é hoje e mais os dias que chamamos na função..
-    time.setTime(time.getTime() + (days*24*60*60*1000));
-    
-    //definindo o cookie..
-    document.cookie = `${name} = ${value}; expires = ${time.toUTCString}; path = /;`;
-    
-    return true;
+      //definindo tempo
+      let time = new Date();
+      
+      //definindo o tempo valido do cookie que é hoje e mais os dias que chamamos na função..
+      time.setTime(time.getTime() + (days*24*60*60*1000));
+      
+      //definindo o cookie..
+      document.cookie = `${name} = ${value}; expires = ${time.toUTCString}; path = /;`;
+      
+      return true;
     
     },
     
@@ -69,6 +69,16 @@ const utils = {
       let response = encrypted.toString(CryptoJS.enc.Utf8);
     
       return response;
+    },
+
+    delete_cookie(name) {
+      document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    },
+
+    logout(){
+      
+      this.delete_cookie('session');
+
     }
 
   },
@@ -119,8 +129,10 @@ const utils = {
             location: raw_loc
           })
         }).
-        then(data => data.text());
-    
+        then(data => data.json());
+        
+        //console.log(response);
+
         return response;
     
       } catch (error) {
@@ -144,7 +156,7 @@ const utils = {
         }),
         mode: 'cors'
       }
-      ).then(data => data.text());
+      ).then(data => data.json());
 
         return response;
 

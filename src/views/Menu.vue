@@ -59,7 +59,7 @@
 
     let ip = utils.services.get_ip();
 
-    const workplaces = ref([]);
+    const workplaces = ref(null);
 
     ip.then(data => {
 
