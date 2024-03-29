@@ -51,10 +51,6 @@
 
         utils.imaginenote_api.login_user(pin.value).then(data => {
 
-            console.log(data);
-            console.log(utils.general.get_cookie('session'));
-            
-
             //em casos de erros exibe o erro da api..
             if (data.error) {
 
@@ -66,17 +62,22 @@
             }else if (data.user) {//em sucesso salva o token do user e manda ele para o menu
                 wrong_pin.value = false;
                 loading.value = false;
-                console.log(data.user);
-                utils.general.set_cookie('session', data.user, 30);
-                                console.log(utils.general.get_cookie('session'));
-                //router.push({name:'menu', query:{new:true}});
-            }else{
 
+                utils.general.set_cookie('session', data.user, 30);
+
+                router.push({name:'menu', query:{new:true}});
+
+            }else if(data == false){
+                loading.value = false;
+                wrong_pin.value = true;
+                error_message.value = "Houve um erro de conexão.";
+            }else{
                 loading.value = false;
                 wrong_pin.value = true;
                 error_message.value = "Algo deu errado.";
-
             }
+
+
             
 
         })

@@ -107,7 +107,6 @@ const utils = {
 
   },
 
-
   //API LARAVEL
   imaginenote_api: {
 
@@ -137,7 +136,6 @@ const utils = {
     
       } catch (error) {
         console.error(error);
-        return false;
       }
     },
 
@@ -200,10 +198,53 @@ const utils = {
 
       }
 
+    },
+
+    async register_user_note(raw_user_id){
+
+      let now = new Date();
+
+      try {
+
+        const response = await fetch('http://127.0.0.1:8000/api/note/register',
+        {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id_user: raw_user_id,
+            name: `Nova anotação em ${now.getDate()}/${now.getMonth()}/${now.getFullYear()} - ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
+          }),
+          mode: 'cors'
+        }
+        ).then(data => data.json());
+
+        return response;
+
+      } catch (error) {
+        
+        console.error(error);
+
+      }
+
     }
 
-  }
+  },
 
 }
 
-export {utils};
+//USER DATA
+const user = async () => {
+  try {
+
+    return await utils.imaginenote_api.get_user_data(utils.general.get_cookie('session'));
+    
+  } catch (error) {
+
+    console.error(error);
+
+  }
+}
+
+export {utils, user};
