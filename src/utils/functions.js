@@ -182,11 +182,11 @@ const utils = {
 
     },
 
-    async user_notes(raw_ip) {
+    async user_notes(raw_id) {
 
       try {
     
-        const response = await fetch('http://127.0.0.1:8000/api/note/' + raw_ip, {
+        const response = await fetch('http://127.0.0.1:8000/api/note/all/' + raw_id, {
           method: 'GET'
         }).then(data => data.json());
       
