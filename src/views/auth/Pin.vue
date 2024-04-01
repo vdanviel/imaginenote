@@ -65,7 +65,9 @@
 
                 utils.general.set_cookie('session', data.user, 30);
 
-                router.push({name:'menu', query:{new:true}});
+                router.push({name:'menu'});
+
+                location.reload();
 
             }else if(data == false){
                 loading.value = false;

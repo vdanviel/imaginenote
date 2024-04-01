@@ -31,9 +31,9 @@
 
         const pass = await user();
 
-        utils.imaginenote_api.user_notes(pass.id).then(data => {
+        //location.reload();
 
-            console.log(data);
+        utils.imaginenote_api.user_notes(pass.id).then(data => {
 
             if (data.length != 0) {
                 
