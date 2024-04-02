@@ -24,7 +24,7 @@ const router = createRouter({
     {
       path: '/vizualize/:id',
       name: 'note',
-      component: () => import('../views/Main.vue')
+      component: () => import('../views/note/Note.vue')
     }
   ]
 });
