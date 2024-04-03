@@ -230,7 +230,7 @@ const utils = {
 
     },
 
-    async save_note(raw_note_id, raw_text){
+    async save_text_note(raw_note_id, raw_text){
 
       try {
 
