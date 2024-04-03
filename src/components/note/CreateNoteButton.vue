@@ -10,21 +10,23 @@
 </template>
 
 <script setup>
-
     import { utils, user } from "../../utils/functions.js";
     import { useRouter } from "vue-router";
 
+    const router = useRouter();
+
     const register = async () => {
-        
         const pass = await user();
 
         utils.imaginenote_api.register_user_note(pass.id).then((data) => {
 
-            const router = useRouter();
-            router.push({name:'note', params:{id: data.id}});
-
+            // Check if router is defined before using it
+            if (router) {
+                router.push(`/vizualize/${data.id}`);
+            } else {
+                console.error("Router is undefined");
+            }
         });
-        
     }
-
 </script>
+

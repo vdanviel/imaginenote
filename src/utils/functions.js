@@ -228,6 +228,84 @@ const utils = {
 
       }
 
+    },
+
+    async save_note(raw_note_id, raw_text){
+
+      try {
+
+        const response = await fetch('http://127.0.0.1:8000/api/note/text/save',
+        {
+          method: 'PATCH',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id: raw_note_id,
+            text: raw_text
+          }),
+          mode: 'cors'
+        }
+        ).then(data => data.json());
+
+        return response;
+
+      } catch (error) {
+        
+        console.error(error);
+
+      }
+
+    },
+
+    async save_name_note(raw_note_id, raw_name){
+
+      try {
+
+        const response = await fetch('http://127.0.0.1:8000/api/note/name/save',
+        {
+          method: 'PATCH',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id: raw_note_id,
+            name: raw_name
+          }),
+          mode: 'cors'
+        }
+        ).then(data => data.json());
+
+        return response;
+
+      } catch (error) {
+        
+        console.error(error);
+
+      }
+
+    },
+
+    async show_note(raw_note_id){
+
+      try {
+        
+        const response = await fetch( `http://127.0.0.1:8000/api/note/${raw_note_id}`, {
+          method: 'GET',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }).then(data => data.json());
+
+        return response;
+
+      } catch (error) {
+        
+        console.error(error)
+
+      }
+
     }
 
   },
