@@ -16,7 +16,7 @@
       <AddAudio @click="addmidia('audio')"/>
     </div>    
 
-    <div  contenteditable="true" class="border rounded-lg px-4 py-2 flex-grow mb-[30px]" @input="update_text" placeholder="Digite seu texto aqui" v-html="note.text"></div>
+    <textarea contenteditable="true" class="border rounded-lg px-4 py-2 flex-grow mb-[30px]" @input="update_text" placeholder="Digite seu texto aqui" v-model="text"></textarea>
     
     <div class="media-container relative mt-[35px]">
       <div v-for="(midia, index) in midia" :key="index" class="midia-item absolute">
@@ -42,7 +42,8 @@
   import { utils } from "../../utils/functions.js";
 
   //models vue
-  const note = reactive({ id: null, name: '', text: '' });//reactive - para os dados serem atualizados automaticamnete e exbidos no ui..
+  const note = reactive({ id: null, name: ''});//reactive - para os dados serem atualizados automaticamnete e exbidos no ui..
+  let text = '';
   const midia = ref([]);
   const route = useRoute();
   const loading = ref(true);
@@ -51,7 +52,7 @@
   utils.imaginenote_api.show_note(route.params.id).then(data => {
     note.id = data.id;
     note.name = data.name;
-    note.text = data.text;
+    text = data.text;
     loading.value = false;
   });
 
@@ -65,8 +66,7 @@
     midia.value.push({ tipo, x: 0, y: 0 });
   }
 
-  const update_text = (event) => {
-    note.text = event.target.value;
+  const update_text = () => {
     saved.value = true; // Mostra SavedItem quando o nome é atualizado
     save_note('text');//requisitando salvamento da nota..
   }
@@ -76,16 +76,17 @@
 
     if (who == 'name') {
       utils.imaginenote_api.save_name_note(note.id, note.name).then((data) => {
-        if (data.note_name_saved) {
-          saved.value = false; // Oculta SavedItem após salvar
-        }
+
+        if (data.note_name_saved) saved.value = false; // Oculta SavedItem após salvar
+
       });
     }
 
     if (who == 'text') {
-      utils.imaginenote_api.save_text_note(note.id, note.text).then((data) => {
-        console.log(note.text);
-        console.log(data);
+      utils.imaginenote_api.save_text_note(note.id, text).then((data) => {
+
+        if(data.note_text_saved) saved.value = false;        
+
       });
     }
 
