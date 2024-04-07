@@ -31,6 +31,7 @@ const router = createRouter({
 
 //gerenciamento de acesso de rotas
 router.beforeEach((to, from, next) => {
+  console.log(utils.general.get_cookie('session'));
   const isUserLoggedIn = utils.general.get_cookie('session');
 
   if (!isUserLoggedIn && to.name !== 'login') {

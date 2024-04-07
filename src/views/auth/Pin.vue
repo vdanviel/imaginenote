@@ -49,6 +49,8 @@
         
         loading.value = true;
 
+        console.log(pin.value);
+
         utils.imaginenote_api.login_user(pin.value).then(data => {
 
             //em casos de erros exibe o erro da api..
@@ -65,9 +67,12 @@
 
                 utils.general.set_cookie('session', data.user, 30);
 
-                router.push({name:'menu'});
+                console.log(data.user);
+                console.log(utils.general.get_cookie('session'));
 
-                location.reload();
+                //router.push({name:'menu'});
+
+                //location.reload();
 
             }else if(data == false){
                 loading.value = false;
