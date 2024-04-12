@@ -62,6 +62,8 @@
             }else if (data.user) {//em sucesso salva o token do user e manda ele para o menu
                 wrong_pin.value = false;
                 loading.value = false;
+                
+                utils.general.set_cookie('session', data.user, 30);
 
                 router.push({name:'menu'});
 

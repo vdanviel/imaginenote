@@ -49,6 +49,7 @@
   const loading = ref(true);
   const saved = ref(false);
 
+  //recuperando as ifno da nota no canco e colocando nos v-models..
   utils.imaginenote_api.show_note(route.params.id).then(data => {
     note.id = data.id;
     note.name = data.name;
@@ -118,9 +119,3 @@
   }
 
 </script>
-
-<style scoped>
-.midia-item {
-  /* Estilos para as mídias */
-}
-</style>

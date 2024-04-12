@@ -20,12 +20,8 @@
 
         utils.imaginenote_api.register_user_note(pass.id).then((data) => {
 
-            // Check if router is defined before using it
-            if (router) {
-                router.push(`/vizualize/${data.id}`);
-            } else {
-                console.error("Router is undefined");
-            }
+            router.push(`/vizualize/${data.id}`);
+
         });
     }
 </script>

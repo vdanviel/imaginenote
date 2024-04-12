@@ -172,8 +172,15 @@ const utils = {
 
       try {
     
-        const response = await fetch('http://127.0.0.1:8000/api/data?token=' + raw_token, {
-          method: 'GET'
+        const response = await fetch('http://127.0.0.1:8000/api/data', {
+          method: 'POST',
+          body: JSON.stringify({
+            token: raw_token
+          }),
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json'
+          }
         }).then(data => data.json());
       
         return response;
@@ -206,7 +213,8 @@ const utils = {
 
     async register_user_note(raw_user_id){
 
-      let now = new Date();
+      // Define o fuso horário para 'America/New_York'
+      const date = new Date().toLocaleString('pt-BR', {timeZone: 'America/Sao_Paulo'});
 
       try {
 
@@ -218,7 +226,7 @@ const utils = {
           },
           body: JSON.stringify({
             id_user: raw_user_id,
-            name: `Nova anotação em ${now.getDate()}/${now.getMonth()}/${now.getFullYear()} - ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`
+            name: `Nova anotação em ${date}`
           }),
           mode: 'cors'
         }
@@ -319,8 +327,9 @@ const utils = {
 //USER DATA
 const user = async () => {
   try {
-
-    return await utils.imaginenote_api.get_user_data(utils.general.get_cookie('session'));
+    const user = await utils.imaginenote_api.get_user_data(utils.general.get_cookie('session'));
+    console.log(user);
+    return user;
     
   } catch (error) {
 
