@@ -49,8 +49,6 @@
         
         loading.value = true;
 
-        console.log(pin.value);
-
         utils.imaginenote_api.login_user(pin.value).then(data => {
 
             //em casos de erros exibe o erro da api..
@@ -59,20 +57,15 @@
                 loading.value = false;
                 wrong_pin.value = true;
 
-                error_message.value = typeof data.error.pin != 'undefined' ? data.error.pin[0] : (data.error == 'absent_token' ? 'Código de acesso inexistente.' : (data.error == 'expired_token' ? 'Código de acesso expirado.' : 'Código de acesso inválido.'));
+                error_message.value = typeof data.error.pin != 'undefined' ? data.error.pin[0] : (data.error == 'absent_token' ? 'Código de acesso inexistente.' : (data.error == 'expired_token' ? 'Código de acesso expirado. (volte para login)' : 'Código de acesso inválido.'));
 
             }else if (data.user) {//em sucesso salva o token do user e manda ele para o menu
                 wrong_pin.value = false;
                 loading.value = false;
 
-                utils.general.set_cookie('session', data.user, 30);
+                router.push({name:'menu'});
 
-                console.log(data.user);
-                console.log(utils.general.get_cookie('session'));
-
-                //router.push({name:'menu'});
-
-                //location.reload();
+                location.reload();
 
             }else if(data == false){
                 loading.value = false;

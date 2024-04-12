@@ -19,12 +19,16 @@ const utils = {
     
         //separando os i e os values com o separador;
         let cookies_items = cookies.split(';');
-    
+
         //iterando sobre os items dos cookies
         for (const item of cookies_items) {
     
           //separando o nome do cookie e o valor do cookie..
-          const [cookie_name, cookie_value] = item.split('=');
+          const [raw_cookie_name, raw_cookie_value] = item.split('=');
+
+          //tirando espeços desnecessários do nome e do valor do cookie..
+          const cookie_name = String(raw_cookie_name).trim();
+          const cookie_value = String(raw_cookie_value).trim();
     
           //se o nome do cookie for o mesmo que o cookie que procuramos..
           if (cookie_name == index) {

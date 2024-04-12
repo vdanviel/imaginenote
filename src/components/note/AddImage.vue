@@ -9,18 +9,23 @@
         </g>
       </svg>
       Nova Imagem
+      <!-- Input de arquivo oculto -->
+      <input type="file" id="file_input" multiple accept="image/png,jpg" style="display: none" @change="handle_file">
     </label>
-    <!-- Input de arquivo oculto -->
-    <input type="file" id="file_input" ref="file_input" style="display: none" @change="handleFileChange">
+    
   </div>
 </template>
 
-<script scoped>
+<script setup>
 
-    const register_img = () => {
+  const emit = defineEmits(['render_image']);
 
+  const handle_file = (e) => {
 
+    const midia_list = e.target.files;
 
-    }
+    emit('render_image', midia_list);
+
+  }
 
 </script>

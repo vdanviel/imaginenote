@@ -11,7 +11,7 @@
     <input @input="update_name" type="text" max="50" class="text-black my-5 mb-8 font-bold text-[29px] w-[50%] border rounded-lg p-1" :value="note.name">
 
     <div class="flex flex-row  space-x-4 mb-4">
-      <AddImage @click="addmidia('image')"/>
+      <AddImage @render_image="addmidia"/>
       <AddVideo @click="addmidia('video')"/>
       <AddAudio @click="addmidia('audio')"/>
     </div>    
@@ -40,11 +40,11 @@
   import { ref, reactive } from 'vue';
   import { useRoute } from "vue-router"; 
   import { utils } from "../../utils/functions.js";
+  import { firebase } from "../../utils/firebase.js";
 
   //models vue
   const note = reactive({ id: null, name: ''});//reactive - para os dados serem atualizados automaticamnete e exbidos no ui..
   let text = '';
-  const midia = ref([]);
   const route = useRoute();
   const loading = ref(true);
   const saved = ref(false);
@@ -62,13 +62,38 @@
     save_note('name');//requisitando salvamento da nota..
   }
 
-  const addmidia = (tipo) => {
-    midia.value.push({ tipo, x: 0, y: 0 });
-  }
-
   const update_text = () => {
     saved.value = true; // Mostra SavedItem quando o nome é atualizado
     save_note('text');//requisitando salvamento da nota..
+  }
+
+  const addmidia = async (midia_list) => {
+
+    //verificando que tipo de mídia é..
+
+    //imagem
+    if (midia_list[0].type.indexOf('image') !== -1) {//indexOf retorna -1 se n encontrar..
+      
+      saved.value = true; // Mostra SavedItem
+
+      //salvando nome dos arquivos no banco de dados..
+      //code..
+
+      //criando o caminho onde as imagens vao ficar no google storage..
+      const references = firebase.create_references(midia_list, 'img');
+
+      //upando imagens no google storage..
+      const upload_result = firebase.upload(references, midia_list);
+
+      //renderizando imagem no front..
+
+
+      saved.value = false;
+      
+
+    }
+
+    
   }
 
   // Assuma que você tem uma função saveNote para salvar as alterações no banco de dados
