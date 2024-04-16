@@ -21,7 +21,11 @@
 
         <AttentionAlert :tittle="error_message" v-show="wrong_pin" class="mb-[10px]"/>
 
-        <button @click="login" type="submit" class="bg-green-500 shadow hover:bg-green-600 text-white font-bold py-2 px-4 rounded cursor-pointer">Começar</button>
+        <div class="flex gap-4">
+            <button @click="login" type="submit" class="bg-green-500 shadow hover:bg-green-600 text-white font-bold py-2 px-4 rounded cursor-pointer">Começar</button>
+            <PatternButton tittle="Voltar para Login" @func="back()"/>
+        </div>
+        
 
     </div>
 
@@ -29,10 +33,12 @@
 
 <script setup>
 
+    import AttentionAlert from "../../components/alerts/AttentionAlert.vue";
+    import PatternButton from "../../components/PatternButton.vue";
+    import Loading from "../../components/Loading.vue";
+
     import { ref } from "vue";
     import { utils } from "../../utils/functions.js";
-    import Loading from "../../components/Loading.vue";
-    import AttentionAlert from "../../components/alerts/AttentionAlert.vue";
     import { useRouter } from "vue-router";
 
     //vars do template
@@ -83,6 +89,13 @@
             
 
         })
+
+    }
+
+    //volta para login
+    const back = () => {
+
+        router.push({name: 'login'});
 
     }
 

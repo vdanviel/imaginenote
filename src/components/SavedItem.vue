@@ -1,6 +1,6 @@
 <template>
 
-  <div class="fixed bottom-0 left-1/2 my-2 mb-10 flex -translate-x-1/2 transform cursor-default items-center rounded-lg bg-[#22c55e94] p-2 text-white">
+  <div class="fixed bottom-0 left-1/2 my-2 mb-10 flex -translate-x-1/2 transform cursor-default items-center rounded-lg bg-[#fde767b8] p-2 text-white">
     <span class="mr-2">Salvando...</span>
     <svg class="inline-block h-6 w-6 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
       <!-- Definindo o gradiente -->

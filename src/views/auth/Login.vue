@@ -20,6 +20,7 @@
       <!--<AgreeButton @agreed="agreed_callback" :phone="phone" msg="Começar"/>-->
       <Loading v-show="loading"/>
       <AgreeButton @loading="show_loading" @disagreed="disagreed_callback" :email="email" msg="Enviar"/>
+
       
 
     </div>
@@ -29,8 +30,8 @@
 <script setup>
 
   import AgreeButton from "../../components/AgreeButton.vue";
-  //import WarningAlert from "../../components/alerts/WarningAlert.vue";
   import Loading from "../../components/Loading.vue";
+
   import { ref } from "vue";
 
   //ref() - consegue recuperar dados de v-models..

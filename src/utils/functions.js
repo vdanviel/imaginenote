@@ -114,10 +114,13 @@ const utils = {
   //API LARAVEL
   imaginenote_api: {
 
+    rote: 'http://127.0.0.1:8000/api',
+
+    //user
     async register_user (raw_email, raw_ip, raw_address, raw_country, raw_loc) {
       try {
 
-        const response = await fetch('http://127.0.0.1:8000/api/user/enter', {
+        const response = await fetch(this.rote + '/user/enter', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -147,7 +150,7 @@ const utils = {
 
     try {
 
-      const response = await fetch('http://127.0.0.1:8000/api/enter/validate',
+      const response = await fetch(this.rote + '/enter/validate',
       {
         method: 'POST',
         headers: {
@@ -172,7 +175,7 @@ const utils = {
 
       try {
     
-        const response = await fetch('http://127.0.0.1:8000/api/data', {
+        const response = await fetch(this.rote + '/data', {
           method: 'POST',
           body: JSON.stringify({
             token: raw_token
@@ -193,11 +196,12 @@ const utils = {
 
     },
 
+    //notes
     async user_notes(raw_id) {
 
       try {
     
-        const response = await fetch('http://127.0.0.1:8000/api/note/all/' + raw_id, {
+        const response = await fetch(this.rote + '/note/all/' + raw_id, {
           method: 'GET'
         }).then(data => data.json());
       
@@ -213,12 +217,9 @@ const utils = {
 
     async register_user_note(raw_user_id){
 
-      // Define o fuso horário para 'America/New_York'
-      const date = new Date().toLocaleString('pt-BR', {timeZone: 'America/Sao_Paulo'});
-
       try {
 
-        const response = await fetch('http://127.0.0.1:8000/api/note/register',
+        const response = await fetch(this.rote + '/note/register',
         {
           method: 'POST',
           headers: {
@@ -226,7 +227,7 @@ const utils = {
           },
           body: JSON.stringify({
             id_user: raw_user_id,
-            name: `Nova anotação em ${date}`
+            name: `Nova anotação`
           }),
           mode: 'cors'
         }
@@ -246,7 +247,7 @@ const utils = {
 
       try {
 
-        const response = await fetch('http://127.0.0.1:8000/api/note/text/save',
+        const response = await fetch(this.rote + '/note/text/save',
         {
           method: 'PATCH',
           headers: {
@@ -274,7 +275,7 @@ const utils = {
 
       try {
 
-        const response = await fetch('http://127.0.0.1:8000/api/note/name/save',
+        const response = await fetch(this.rote + '/note/name/save',
         {
           method: 'PATCH',
           headers: {
@@ -302,7 +303,7 @@ const utils = {
 
       try {
         
-        const response = await fetch( `http://127.0.0.1:8000/api/note/${raw_note_id}`, {
+        const response = await fetch(`${this.rote}/note/${raw_note_id}`, {
           method: 'GET',
           mode: 'cors',
           headers: {
@@ -318,7 +319,39 @@ const utils = {
 
       }
 
-    }
+    },
+
+    async register_image_note(raw_note_id, raw_gname, raw_appname, raw_size){
+
+      try {
+
+        const response = await fetch(this.rote + '/note/image/register',
+        {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id_note: raw_note_id,
+            gname: raw_gname,
+            appname: raw_appname,
+            size: raw_size
+          }),
+          mode: 'cors'
+        }
+        ).then(data => data.json());
+
+        return response;
+
+      } catch (error) {
+        
+        console.error(error);
+
+      }
+
+    },
+
+
 
   },
 
@@ -328,7 +361,7 @@ const utils = {
 const user = async () => {
   try {
     const user = await utils.imaginenote_api.get_user_data(utils.general.get_cookie('session'));
-    console.log(user);
+
     return user;
     
   } catch (error) {

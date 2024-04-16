@@ -20,7 +20,7 @@
 
                 <template v-else-if="workplaces">
                     <div class="w-[400px] m-2" v-for="(note, i) in workplaces" :key="i">
-                        <NoteButton :id="note.id" :name="note.name" :date="note.created_at"/>
+                        <NoteButton :id="note.id" :name="note.name" :date="format_date(note.created_at)"/>
                     </div>   
                 </template>
 
@@ -59,8 +59,7 @@
 
     onBeforeMount(async () => {
         const pass = await user();
-        console.log(utils.general.get_cookie('session'));
-        console.log(pass);
+
         utils.imaginenote_api.user_notes(pass.id).then(data => {
             loading.value = true;
             if (data.length != 0) {
@@ -72,5 +71,25 @@
             }
         });
     });
+
+    // Método para formatar a data
+    const format_date = (dateString) => {
+
+        let date = new Date(dateString);
+
+        let day = date.getDate().toString().length == 1 ? "0" + date.getDate().toString() : date.getDate().toString();
+
+        //No JavaScript, os meses são indexados a partir de zero, o que significa que janeiro é representado como 0, fevereiro como 1, e assim por diante até dezembro que é representado como 11.
+        let adjusted_mounth =  date.getMonth() + 1;
+
+        let mount = adjusted_mounth.toString().length == 1 ? "0" + adjusted_mounth.toString() : adjusted_mounth.toString();
+        let year = date.getFullYear().toString().length == 1 ? "0" + date.getFullYear().toString() : date.getFullYear().toString();
+
+        let hour = date.getHours().toString().length == 1 ? "0" + date.getHours().toString() : date.getHours().toString();
+        let minute = date.getMinutes().toString().length == 1 ? "0" + date.getMinutes().toString() : date.getMinutes().toString();
+
+        return `${day}/${mount}/${year} ás ${hour}:${minute}`
+
+    };
 
 </script>
