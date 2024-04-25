@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes, getDownloadURL  } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL, listAll, getMetadata, deleteObject } from "firebase/storage";
 import { user } from "./functions.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -115,9 +115,8 @@ const firebase = {
     async get_files(references) {
       try {
         const urls = []; // Criando um array para armazenar as URLs dos arquivos
-        const array = await references; // Aguardando a resolução da promessa
     
-        for (const element of array) {
+        for (const element of references) {
           try {
             const url = await getDownloadURL(element); // Aguardando a resolução da promessa
             urls.push(url); // Adicionando a URL ao array
@@ -131,7 +130,68 @@ const firebase = {
         console.error(error);
         throw error; // Rejeita a promise se ocorrer um erro
       }
-    }
+    },
+
+    //vc coloca um caminho de pasta e ele retorna todos os arquivos que estão nessa pasta como objetos _Reference
+    async list_references_objs(reference) {
+      try {
+        const res = await listAll(reference);
+        return res.items;
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+
+    async get_metadatas(references) {
+      try {
+        const metadatas = []; // Criando um array para armazenar as metadatas dos arquivos
+    
+        for (const element of references) {
+          try {
+            const data_file = await getMetadata(element); // Aguardando a resolução da promessa
+            metadatas.push(data_file); // Adicionando a URL ao array
+          } catch (error) {
+            console.error(error); // Lidando com erros individualmente
+          }
+        }
+    
+        return metadatas; // Retornando o array de metadatas
+      } catch (error) {
+        console.error(error);
+        throw error; // Rejeita a promise se ocorrer um erro
+      }
+    },
+
+    async delete(references) {
+      try {
+          // Array para armazenar as promessas de exclusão
+          const deletePromises = [];
+  
+          for (const gref of references) {
+
+            // Excluir o arquivo e adicionar a promessa à lista
+            deletePromises.push(
+                deleteObject(gref).then((res) => {
+                    return true;
+                }).catch((error) => {
+                    console.error(error);
+                    return false;
+                })
+            );
+            
+          }
+  
+          // Esperar que todas as promessas de exclusão sejam resolvidas
+          await Promise.all(deletePromises);
+  
+          // Todas as exclusões foram concluídas com sucesso
+          return true;
+      } catch (error) {
+          console.error(error);
+          throw error;
+      }
+    },
 
   }
   

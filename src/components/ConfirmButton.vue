@@ -1,5 +1,5 @@
 <template>
-  <button @click="dissapate" class="bg-transparent text-gray-400 border-gray-400 border-[3px] font-bold py-2 px-4 rounded">
+  <button @click="dissapate" class="bg-[#FDE767] hover:bg-[#f1da52] text-white font-bold py-2 px-4 rounded">
     {{ tittle }}
   </button>
 </template>

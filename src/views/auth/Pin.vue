@@ -9,7 +9,7 @@
         </p>
 
         <p class="text-center mb-10 lg:w-[650px]">
-            Para entrar no ImagineNote e liberar seus beneficios, é necessário inserir o código de acesso que enviamos a você por email.
+            Para entrar no ImagineNote e liberar seus beneficios, é necessário inserir o código de acesso que enviamos a você por email. O limite de expiração do sódigo é de uma hora.
         </p>
 
         <div class="flex flex-col">
@@ -22,7 +22,7 @@
         <AttentionAlert :tittle="error_message" v-show="wrong_pin" class="mb-[10px]"/>
 
         <div class="flex gap-4">
-            <button @click="login" type="submit" class="bg-green-500 shadow hover:bg-green-600 text-white font-bold py-2 px-4 rounded cursor-pointer">Começar</button>
+            <ConfirmButton tittle="Começar" @func="login"/>
             <PatternButton tittle="Voltar para Login" @func="back()"/>
         </div>
         
@@ -35,6 +35,7 @@
 
     import AttentionAlert from "../../components/alerts/AttentionAlert.vue";
     import PatternButton from "../../components/PatternButton.vue";
+    import ConfirmButton from "../../components/ConfirmButton.vue";
     import Loading from "../../components/Loading.vue";
 
     import { ref } from "vue";
