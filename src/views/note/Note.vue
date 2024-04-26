@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/html-self-closing -->
 <template class="mb-5">
 
   <ConfirmModal v-show="confirm_del_img_section" tittle="Tem certeza que deseja excluir todas as imagens?" desc="Todas as imagens atreladas a essa nota serão excluidas permanentemente." @handle="delete_img_section" @close="confirm_del_img_section = false"/>

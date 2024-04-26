@@ -11,12 +11,13 @@
 
   </div>
   
-  
-  <div class="flex items-center justify-left">
+  <Swiper class="cursor-grab active:cursor-grabbing" :slides-per-view="6" loop="true"  freeMode="true" :autoplay="{delay: 5000}">
 
-    <Image v-for="(item, index) in midia" :key="index" :img_name="item.name" :img_src="item.src"/>
+    <SwiperSlide v-for="(item, index) in midia" :key="index">
+      <Image :img_name="item.name" :img_src="item.src"/>
+    </SwiperSlide>
 
-  </div>
+  </Swiper>
 
 </div>
 
@@ -25,6 +26,9 @@
 <script setup>
     
   import Image from "./image/Image.vue";
+  import { Swiper, SwiperSlide } from 'swiper/vue';
+
+  import 'swiper/css';
   import { firebase } from "../../utils/firebase.js";
 
   const props = defineProps(['midia', 'midia_name', 'type']);

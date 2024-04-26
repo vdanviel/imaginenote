@@ -9,5 +9,6 @@
 </template>
 
 <script setup>
+
     const props = defineProps(['img_name', 'img_src']);
 </script>
