@@ -64,7 +64,7 @@
                 loading.value = false;
                 wrong_pin.value = true;
 
-                error_message.value = typeof data.error.pin != 'undefined' ? data.error.pin[0] : (data.error == 'absent_token' ? 'Código de acesso inexistente.' : (data.error == 'expired_token' ? 'Código de acesso expirado. (volte para login)' : 'Código de acesso inválido.'));
+                error_message.value = typeof data.error.pin != 'undefined' ? data.error.pin[0] : (data.error == 'absent_token' ? 'Código de acesso inválido.' : (data.error == 'expired_token' ? 'Código de acesso expirado. (volte para login)' : 'Código de acesso inválido.'));
 
             }else if (data.user) {//em sucesso salva o token do user e manda ele para o menu
                 wrong_pin.value = false;
