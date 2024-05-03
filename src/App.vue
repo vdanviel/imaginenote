@@ -1,4 +1,7 @@
 <template>
+
+  <ConfirmModal v-show="leaving" tittle="Tem certeza que deseja sair?" desc="Sua sessão será encerrada e você tera que entrar novamente." @handle="logout" @close="leaving = false"/>
+
   <body class="mx-[10px] lg:mx-[100px]">
     <header>
       <nav class="flex flex-col items-center w-full shadow rounded-b-[16px] p-[10px]">
@@ -14,7 +17,7 @@
           <img width="24px" :src="home" alt="Sair">
           </router-link>
 
-          <button v-show="logged" @click="logout" class="rounded-full shadow rounded-[100%] p-3 hover:bg-[#c6c6c6] focus:outline-none mt-[25px] mb-[18px]">
+          <button v-show="logged" @click="leaving = true" class="rounded-full shadow rounded-[100%] p-3 hover:bg-[#c6c6c6] focus:outline-none mt-[25px] mb-[18px]">
             <img width="24px" :src="exit_img" alt="Sair">
           </button>
         </div>
@@ -33,6 +36,9 @@ import { ref, onBeforeMount } from "vue";
 import { utils } from "./utils/functions.js";
 import home from './assets/home.png';
 import exit from './assets/exit.png';
+
+import ConfirmModal from "./components/alerts/ConfirmModal.vue";
+const leaving = ref(false);
 
 const router = useRouter();
 const logged = ref(false); // Inicializando como falso

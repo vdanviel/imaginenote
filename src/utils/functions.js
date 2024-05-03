@@ -143,6 +143,7 @@ const utils = {
     
       } catch (error) {
         console.error(error);
+        return false;
       }
     },
 
@@ -351,7 +352,33 @@ const utils = {
 
     },
 
+    async rename_image_note(raw_note_id, raw_appname){
+      
+      try {
 
+        const response = await fetch(this.rote + '/note/image/name/save',
+        {
+          method: 'PATCH',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            id_note: raw_note_id,
+            appname: raw_appname
+          }),
+          mode: 'cors'
+        }
+        ).then(data => data.json());
+
+        return response;
+
+      } catch (error) {
+        
+        console.error(error);
+
+      }
+
+    }
 
   },
 

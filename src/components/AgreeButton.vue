@@ -1,6 +1,6 @@
 <template>
   <AttentionAlert :tittle="state.error" v-show="state.show" class="mb-[25px]"/>
-  <button @click='handle_click' class="bg-green-500 shadow hover:bg-green-600 text-white font-bold py-2 px-4 rounded cursor-pointer">
+  <button @click='handle_click' class="bg-[#FDE767] hover:bg-[#f1da52] text-white font-bold py-2 px-4 rounded cursor-pointer">
     {{ msg }}
   </button>
 </template>

@@ -8,8 +8,7 @@
             <p class="text-gray-700">{{props.desc}}</p>
             <!-- Botões de confirmar e cancelar -->
             <div class="mt-4 flex justify-start gap-2">
-                <ConfirmButton tittle="Confirmar" @func="confirm_modal"/>
-                <PatternButton tittle="Cancelar" @func="close_modal"/>
+                <ConfirmButton tittle="OK" @func="close_modal"/>
             </div>
         </div>
     </div>
@@ -23,13 +22,14 @@
     import ConfirmButton from "../ConfirmButton.vue";
 
     const props = defineProps(['tittle', 'desc']);
-    const emit = defineEmits(['handle', 'close']);
-    
-    const confirm_modal = () => {
+    const emit = defineEmits(['close']);
 
-        emit('handle');
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            emit('close');
+        }
 
-    }
+    });
 
     const close_modal = () => {
 

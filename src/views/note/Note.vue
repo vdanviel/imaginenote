@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/html-self-closing -->
 <template class="mb-5">
 
   <ConfirmModal v-show="confirm_del_img_section" tittle="Tem certeza que deseja excluir todas as imagens?" desc="Todas as imagens atreladas a essa nota serão excluidas permanentemente." @handle="delete_img_section" @close="confirm_del_img_section = false"/>
@@ -19,8 +18,8 @@
       <AddAudio @render_audio="addmidia"/>  
     </div>
 
-    <MidiaSection v-show="has_images" @delete_section="confirm_del_img_section = true" :midia="midia_images" midia_name="Imagens" type="img"/>
-
+    <ImageSection v-show="has_images" @delete_section="confirm_del_img_section = true" @show_gallery="show_img_gallery = true" @refresh_section="refresh_img_section" :midia="midia_images.slice(0, 9)" midia_name="Imagens" type="img"/>
+    <ImageGallery v-show="show_img_gallery" :midia="midia_images" midia_name="Imagens" @close="show_img_gallery = false" @refresh_section="refresh_img_section"/>
     <div contenteditable="true" class="border resize-none rounded-lg px-4 py-2 m-[30px] h-[100vh]" @input="update_text" @change="update_text" id="current_text" v-html="db_text"></div>
     
   </div>
@@ -31,7 +30,9 @@
 
   //components..
   import AddImage from "../../components/note/image/AddImage.vue";
-  import MidiaSection from "../../components/note/MidiaSection.vue";
+  import ImageSection from "../../components/note/image/ImageSection.vue";
+  import ImageGallery from "../../components/note/image/ImageGallery.vue";
+  import FullScreenImage from "../../components/note/image/FullScreenImage.vue";
   import AddVideo from "../../components/note/video/AddVideo.vue";
   import AddAudio from "../../components/note/audio/AddAudio.vue";
   import SavedItem from "../../components/SavedItem.vue";
@@ -54,12 +55,14 @@
   const loading = ref(true);
   const saved = ref(false);
   const unsaved_changes = ref(false);//para saber se há alterações não salvas
-  //midia
+  //midia image
   const midia_images = ref(null);
   const has_images = ref(false);
+  const show_img_gallery = ref(false);
+  const confirm_del_img_section = ref(false);//modal que surge se usuário pede para excluir sessão de iamgens..
+  //midia
   const has_videos = ref(false);
   const has_audios = ref(false);
-  const confirm_del_img_section = ref(false);//modal que surge se usuário pede para excluir sessão de iamgens..
 
   //recuperando as ifno da nota no canco e colocando nos v-models..
   utils.imaginenote_api.show_note(route.params.id).then(data => {
@@ -133,10 +136,10 @@
   //LIDANDO COM "unsaved_changes" - CASO USUÁRIO TENTE SAIR DA NOTA QUANDO A NOTA AINDA N FOI SALVA..
 
   // Adicione um ouvinte para o evento beforeunload 
-  window.addEventListener('beforeunload', confirmExit);
+  window.addEventListener('beforeunload', confirm_exit);
 
   // Função para exibir o prompt de confirmação
-  function confirmExit(event) {
+  function confirm_exit(event) {
     if (unsaved_changes.value == true) {
       // Defina a mensagem que será exibida no prompt
       event.returnValue = 'Você tem alterações não salvas. Tem certeza que deseja sair?';
@@ -145,7 +148,7 @@
   
   //evita de ficar chamando mensagem de confirmação para sair da nota se ela n salvou toda hr..
   onBeforeUnmount(() => {
-    window.removeEventListener('beforeunload', confirmExit);
+    window.removeEventListener('beforeunload', confirm_exit);
   });
 
   //LIDANDO COM MIDIA
@@ -165,8 +168,8 @@
       saved.value = true; // Mostra SavedItem
 
       //salvando dados da imagem(s) no banco de dados..
-      for (const key in midia_list) {//midia_mist - objeto FileList de quando selecionamos as imagens que queremos..
-        if (Object.hasOwnProperty.call(midia_list, key)) {
+      /*for (const key in midia_list) {//midia_mist - objeto FileList de quando selecionamos as imagens que queremos..
+      if (Object.hasOwnProperty.call(midia_list, key)) {
           const element = midia_list[key];
 
           //aqui ele está recebendo o id do banco, o nome do arquivo e o tamanho do arquivo para salvar no banco..
@@ -180,7 +183,7 @@
           }
           
         }
-      }
+      } */
 
       //criando o caminho onde as imagens vao ficar no google storage..
       const references = firebase.storage.create_references(midia_list, 'img', note.id);
@@ -210,9 +213,31 @@
     
   }
 
+  const refresh_img_section = async () => {
+
+    try {
+      
+      const pass = await user();
+
+      const imgmetadatas = await firebase_images(pass);
+
+      midia_images.value = imgmetadatas;
+
+      return true;
+
+    } catch (error) {
+      
+      console.error(error);
+
+      return false;
+
+    }
+    
+  }
+
   //carrega os dados das imagens desse nota e exibe no front da sessão de iamgens..
   async function firebase_images(user) {
-    
+
     try {
       
       // Pegando a referência da pasta de imagens
@@ -280,9 +305,16 @@
 
     //v-show das sessões de..
     //imagens
-    imgmetadatas.length == 0 ? has_images.value = false : has_images.value = true;
+    if (imgmetadatas.length === 0) {
+      console.log(true);
+      has_images.value = false;
+    } else {
+      has_images.value = true;
+    }
 
     midia_images.value = imgmetadatas;
+
+    console.log(midia_images.value);
 
     //carregamento da página concluído...
     loading.value = false;

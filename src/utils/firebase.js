@@ -164,6 +164,7 @@ const firebase = {
     },
 
     async delete(references) {
+
       try {
           // Array para armazenar as promessas de exclusão
           const deletePromises = [];
@@ -191,7 +192,7 @@ const firebase = {
           console.error(error);
           throw error;
       }
-    },
+    }
 
   }
   
