@@ -2,11 +2,7 @@
 
 <div class="fixed z-40 inset-0 flex items-center justify-center bg-white">
 
-    <div v-if="isloading">
-        <Loading/>
-    </div>
-
-    <div class="flex items-center justify-center" v-else>
+    <div class="flex items-center justify-center">
 
         <!-- Ícone de seta para esquerda -->
         <div class="absolute left-4 top-4 cursor-pointer" @click="close"> 
@@ -19,7 +15,7 @@
         </div>
 
         <!-- Nome da imagem sobreposta -->
-        <p class="absolute left-1/2 top-2 -translate-x-1/2 transform rounded bg-fde767 px-4 py-2 font-bold text-black">{{ props.name.replace('.png', '').replace('.jpg', '') }}</p>
+        <p class="absolute left-1/2 top-2 -translate-x-1/2 transform rounded bg-fde767 px-4 py-2 font-bold text-black">{{ props.name }}</p>
 
         <img class="max-h-[80%] max-w-[80%] p-10" :src="props.src" :alt="props.name" />
 
@@ -34,26 +30,20 @@
 
 <script setup>
 
-    import { ref } from 'vue';
-    import Loading from "../../Loading.vue";
-
     const emit = defineEmits(['close', 'delete']);
-    const props = defineProps(['name', 'src', 'size', 'deleting']);
+    const props = defineProps(['name', 'src', 'size']);
 
-    const imageName = ref("Nome da Imagem");
-    const showSaveButton = ref(false);
+    /*
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                emit('close');
+            }
 
-    const isloading = ref(props.deleting);
-
-    document.addEventListener('keydown', function(event) {
-        if (event.key === "Escape") {
-            emit('close');
-        }
-
-        if (event.key === "Delete") {
-            emit('delete');
-        }
-    });
+            if (event.key === "Delete") {
+                emit('delete');
+            }
+        });
+    */
 
     const close = () => {
         emit('close');

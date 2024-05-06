@@ -1,4 +1,5 @@
 import CryptoJS from 'crypto-js';
+import {Cloudinary} from "@cloudinary/url-gen";
 
 const utils = {
 
@@ -107,6 +108,20 @@ const utils = {
   
       }
   
+    },
+
+    async generate_thumnail(){
+
+      const cld = new Cloudinary(
+        {
+          cloud: {
+            cloudName: 'derwjxngh'
+          }
+        }
+      );
+
+      
+
     }
 
   },

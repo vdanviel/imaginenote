@@ -1,54 +1,53 @@
 <template>
 
-<div>
+  <div>
 
-  <AlertModal v-show="show_error" tittle="Ocorreu um erro." :desc="error_message" @close="show_error = false"/>
+    <AlertModal v-show="show_error" tittle="Ocorreu um erro." :desc="error_message" @close="show_error = false"/>
 
-  <!--image gallery-->
-  <AlertModal v-show="img_deleted" tittle="Imagem deletada com sucesso!" desc="" @close="img_deleted = false"/>
-  <ConfirmModal v-show="confirm_del_img" tittle="Tem certeza que deseja deletar essa imagem?" desc="Essa imagem será deleta da sua nuvem permanentemente." @handle="delete_img" @close="confirm_del_img = false"/>
-  <FullScreenImage v-show="show_img" :name="open_name" :src="open_src" :size="open_size" :deleting="deleting_this_image" @close="close_all" @delete="confirm_del_img = true" />
+    <!--image gallery-->
+    <AlertModal v-show="img_deleted" tittle="Imagem deletada com sucesso!" desc="" @close="img_deleted = false"/>
+    <ConfirmModal v-show="confirm_del_img" tittle="Tem certeza que deseja deletar essa imagem?" :loading="deleting_this_image" desc="Essa imagem será deleta da sua nuvem permanentemente." @handle="delete_img" @close="confirm_del_img = false"/>
+    <FullScreenImage v-show="show_img" :name="open_name" :src="open_src" :size="open_size"  @close="close_all" @delete="confirm_del_img = true" />
 
-  <div class="bg-[#f1eb1a40] z-20 bg-opacity-50 fixed inset-0 overflow-y-auto z-30 flex items-center justify-center">
-    <div class="bg-white rounded-lg p-8 shadow overflow-hidden h-[98%] min-w-[75%]">
+    <div class="bg-[#f1eb1a40] z-20 bg-opacity-50 fixed inset-0 overflow-y-auto z-30 flex items-center justify-center">
+      <div class="bg-white rounded-lg p-8 shadow overflow-hidden h-[98%] min-w-[75%]">
 
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-gray-900 text-lg font-medium">{{props.midia_name}}</h2>
-        <button class="text-gray-700 hover:text-gray-900" :onclick="handle">Fechar</button>
-      </div>
-      
-      <div class="overflow-y-auto max-h-screen">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-gray-900 text-lg font-medium">{{props.midia_name}}</h2>
+          <button class="text-gray-700 hover:text-gray-900" :onclick="closeg">Fechar</button>
+        </div>
         
-        <section class="text-gray-600 body-font">
-          <div class="container px-5 py-24 mx-auto">
-            <div class="flex flex-wrap m-4">
+        <div class="overflow-y-auto max-h-screen">
+          
+          <section class="text-gray-600 body-font">
+            <div class="container px-5 py-24 mx-auto">
+              <div class="grid grid-cols-3 gap-4">
+                <!-- Iterar sobre as imagens -->
+                <div @click="display_img" v-for="(item, index) in props.midia" :key="index" class="p-4 cursor-pointer">
 
-              <div @click="display_img" v-for="(item,index) in props.midia" :key="index" class="w-1/2 p-4 w-full cursor-pointer">
-
-                <div class="block relative h-48 rounded overflow-hidden">
-                  <img id="image" alt="midia" class="object-cover object-center w-full h-full block" :src="item.src">
-                </div>
-
-                <div class="mt-4">
-                  <div class="inline-flex gap-1">
-                    <h3 id="size" class="text-gray-500 text-xs tracking-widest title-font mb-1">{{bytes_to_size(item.size)}}</h3>
-                    <h3 id="format" class="text-gray-500 text-xs tracking-widest title-font mb-1">{{item.contentType.substr(item.contentType.indexOf('/') + 1, item.contentType.length).toUpperCase()}}</h3>
+                  <div class="block relative h-48 rounded overflow-hidden">
+                    <img id="image" alt="midia" class="object-cover object-center w-full h-full block" :src="item.src">
                   </div>
-                  <h2 id="name" class="text-gray-900 title-font text-lg font-medium">{{item.name.replace('.png','').replace('.jpg','')}}</h2>
-                  <p class="mt-1">{{format_date(item.timeCreated)}}</p>
+
+                  <div class="mt-4">
+                    <div class="inline-flex gap-1">
+                      <h3 id="size" class="text-gray-500 text-xs tracking-widest title-font mb-1">{{bytes_to_size(item.size)}}</h3>
+                      <h3 id="format" class="text-gray-500 text-xs tracking-widest title-font mb-1">{{item.contentType.substr(item.contentType.indexOf('/') + 1, item.contentType.length).toUpperCase()}}</h3>
+                    </div>
+                    <p id="name" class="text-gray-900 title-font text-lg font-medium truncate whitespace-nowrap w-[150px]">{{item.name.replace('.png','').replace('.jpg','').replace('.jpeg','').replace('.webp','')}}</p>
+                    <p class="mt-1">{{format_date(item.timeCreated)}}</p>
+                  </div>
+
                 </div>
-
               </div>
-
             </div>
-          </div>
-        </section>
+          </section>
 
+        </div>
       </div>
     </div>
-  </div>
 
-</div>
+  </div>
 
 </template>
 
@@ -84,7 +83,7 @@
   const deleting_this_image = ref(false);
   const img_deleted = ref(false);
 
-  const handle = () => {
+  const closeg = () => {
 
     emit('close');
 
@@ -124,7 +123,7 @@
     const pass = await user();
 
     //criando o caminho no ggole storage firebase..
-    const path = await firebase.storage.create_reference_by_path(pass.email + '/' + 'img' + '/' + route.params.id + '/' + open_name.value + '.' + open_format.value.toLowerCase());
+    const path = await firebase.storage.create_reference_by_path(pass.email + '/' + 'img' + '/' + route.params.id + '/' + open_name.value + '.' + open_format.value.replace('JPEG', 'JPG').toLowerCase());
 
     //solicitando a deleção da imagem no firebase..
     const deleted = await firebase.storage.delete([path]);
@@ -136,10 +135,15 @@
 
       show_img.value = false;
       confirm_del_img.value = false;
-      deleting_this_image.value = true;
+
       img_deleted.value = true;
 
+      console.log(props.midia);
+      
+
     }
+
+    deleting_this_image.value = false;
 
   }
 

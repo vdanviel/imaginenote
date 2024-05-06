@@ -1,7 +1,7 @@
 <template>
 
     <!-- Modal backdrop -->
-    <div @click="close_modal" class="fixed z-50 inset-0 flex items-center justify-center bg-[#f1eb1a40] bg-opacity-50 shadow">
+    <div @click.self="close_modal" class="fixed z-50 inset-0 flex items-center justify-center bg-[#f1eb1a40] bg-opacity-50 shadow">
         <!-- Modal content -->
         <div class="w-2/4 rounded-lg bg-white p-8">
             <h2 class="mb-4 text-xl font-bold">{{props.tittle}}</h2>

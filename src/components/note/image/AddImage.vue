@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Estilize o rótulo do input de arquivo para que pareça um botão -->
-    <label for="file_input" class="bg-gray-300 hover:bg-gray-400 text-black font-bold p-2 rounded-full w-fit flex flex-row justify-between h-fit cursor-pointer">
+    <label for="image_input" class="bg-gray-300 hover:bg-gray-400 text-black font-bold p-2 rounded-full w-fit flex flex-row justify-between h-fit cursor-pointer">
       <svg width="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <g>
           <path d="M0 0h24v24H0z" fill="none"/>
@@ -10,7 +10,7 @@
       </svg>
       Nova Imagem
       <!-- Input de arquivo oculto -->
-      <input type="file" id="file_input" multiple accept="image/png,jpg" style="display: none" @change="handle_file">
+      <input type="file" id="image_input" multiple accept="image/*" style="display: none" @change="handle_file">
     </label>
     
   </div>

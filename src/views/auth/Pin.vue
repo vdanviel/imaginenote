@@ -22,7 +22,7 @@
         <AttentionAlert :tittle="error_message" v-show="wrong_pin" class="mb-[10px]"/>
 
         <div class="flex gap-4">
-            <ConfirmButton tittle="Começar" @func="login"/>
+            <ConfirmButton id="sender" tittle="Começar" @func="login"/>
             <PatternButton tittle="Voltar para Login" @func="back()"/>
         </div>
         
@@ -51,9 +51,20 @@
     //metodos do vue
     const router = useRouter();
 
+    document.addEventListener('keydown', (event) => {
+
+        if(event.key == "Enter"){
+            document.querySelector("#sender").style.background = '#f1da52';    
+            login();
+        }
+
+    });
+
     //função do componente atual..
     const login = () => {
         
+        document.removeEventListener('keydown');
+
         loading.value = true;
 
         utils.imaginenote_api.login_user(pin.value).then(data => {
@@ -86,10 +97,16 @@
                 error_message.value = "Algo deu errado.";
             }
 
-
-            
-
         })
+
+        document.addEventListener('keydown', (event) => {
+
+            if(event.key == "Enter"){
+                document.querySelector("#sender").style.background = '#f1da52';    
+                login();
+            }
+
+        });
 
     }
 

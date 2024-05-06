@@ -2,11 +2,11 @@
 
   <div>
 
-    <AlertModal v-show="img_deleted" tittle="Imagem deletada com sucesso!" desc="" @close="img_deleted = false"/>
-    <ConfirmModal v-show="confirm_del_img" tittle="Tem certeza que deseja deletar essa imagem?" desc="Essa imagem será deleta da sua nuvem permanentemente." :loading="deleting_this_image" @handle="delete_img" @close="confirm_del_img = false"/>
-    <FullScreenImage v-show="show_img" :name="open_name" :src="open_src" :size="open_size" :deleting="deleting_this_image" @close="close_all" @delete="confirm_del_img = true" />  
+    <AlertModal v-show="video_deleted" tittle="Vídeo deletado com sucesso!" desc="" @close="video_deleted = false"/>
+    <ConfirmModal v-show="confirm_del_video" tittle="Tem certeza que deseja deletar esse vídeo?" desc="Esse vídeo será deleta da sua nuvem permanentemente." :loading="deleting_this_video" @handle="delete_video" @close="confirm_del_video = false"/>
+    <FullScreenVideo v-show="show_video" :name="open_name" :src="open_src" :size="open_size" :type="open_type" :deleting="deleting_this_video" @close="close_all" @delete="confirm_del_video = true" />  
 
-    <div class="rounded-lg bg-gray-200 p-4">
+    <div class="rounded-lg bg-gray-200 p-4 mt-5">
 
       <div class="flex items-center align-center justify-between">
         <p class="p-2 font-bold">{{props.midia_name}}</p>
@@ -28,7 +28,7 @@
       <Swiper class="cursor-grab active:cursor-grabbing" :slides-per-view="6" freeMode="true" :autoplay="{delay: 5000}">
 
         <SwiperSlide v-for="(item, index) in midia" :key="index">
-          <Image @show="display_img" :img_name="item.name" :img_src="item.src" :img_b="item.size"/>
+          <Video @show="display_video" :video_name="item.name" :video_src="item.src" :video_b="item.size" :video_type="item.contentType"/>
         </SwiperSlide>
 
       </Swiper>
@@ -43,8 +43,8 @@
   import { ref } from "vue";
   import { useRoute } from "vue-router";
 
-  import FullScreenImage from "./FullScreenImage.vue";
-  import Image from "./Image.vue";
+  import FullScreenVideo from "./FullScreenVideo.vue";
+  import Video from "./Video.vue";
   import ConfirmModal from "../../alerts/ConfirmModal.vue";
   import AlertModal from "../../alerts/AlertModal.vue";
 
@@ -59,40 +59,41 @@
   const route = useRoute();
 
   //v-models
-  const show_img = ref(false);
-  const confirm_del_img = ref(false);//no modal que mostra a imagem em fullscreen ao usuário, confirmação se usuário realmente desja deletar a aimagem ao clicar no icono de desacarte.
-  const open_name = ref('');//aqui ele é string pois em componentes/image/FullScreenImage.vue o nome está querendo redenrizer com metodo .replace() que é de string (pois queremos tirar o '.png' po '.jpg' do titulo da imagem), ent deixamos uma string vazia aqui para não o correr erros
+  const show_video = ref(false);
+  const confirm_del_video = ref(false);//no modal que mostra a imagem em fullscreen ao usuário, confirmação se usuário realmente desja deletar a aimagem ao clicar no icono de desacarte.
+  const open_name = ref('');//aqui ele é string pois em componentes/image/FullScreenVideo.vue o nome está querendo redenrizer com metodo .replace() que é de string (pois queremos tirar o '.png' po '.jpg' do titulo da imagem), ent deixamos uma string vazia aqui para não o correr erros
   const open_src = ref(null);
   const open_size = ref(null);
-  const deleting_this_image = ref(false);
-  const img_deleted = ref(false);
+  const open_type = ref(null);
+  const deleting_this_video = ref(false);
+  const video_deleted = ref(false);
 
-  const display_img = (data) => {
+  const display_video = (data) => {
 
     open_name.value = data.name;
     open_src.value = data.src;
     open_size.value = data.size;
-    
+    open_type.value = data.type;
 
-    show_img.value = true;
+    show_video.value = true;
 
   }
   
   const close_all = () => {
 
-    show_img.value = false;
-    confirm_del_img.value = false;
+    show_video.value = false;
+    confirm_del_video.value = false;
 
   }
 
-  const delete_img = async () => {
+  const delete_video = async () => {
 
-    deleting_this_image.value = true;
+    deleting_this_video.value = true;
 
     const pass = await user();
 
     //criando o caminho no ggole storage firebase..
-    const path = await firebase.storage.create_reference_by_path(pass.email + '/' + 'img' + '/' + route.params.id + '/' + open_name.value);
+    const path = await firebase.storage.create_reference_by_path(pass.email + '/' + 'video' + '/' + route.params.id + '/' + open_name.value);
 
     //solicitando a deleção da imagem no firebase..
     const deleted = await firebase.storage.delete([path]);
@@ -101,15 +102,15 @@
     if (deleted == true) {
       
       await emit('refresh_section');
-      
-      confirm_del_img.value = false;
-      show_img.value = false;
 
-      img_deleted.value = true;
+      show_video.value = false;
+      confirm_del_video.value = false;
+
+      video_deleted.value = true;
 
     }
 
-    deleting_this_image.value = false;
+    deleting_this_video.value = false;
 
   }
 

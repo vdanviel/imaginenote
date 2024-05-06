@@ -1,6 +1,6 @@
 <template>
   <AttentionAlert :tittle="state.error" v-show="state.show" class="mb-[25px]"/>
-  <button @click='handle_click' class="bg-[#FDE767] hover:bg-[#f1da52] text-white font-bold py-2 px-4 rounded cursor-pointer">
+  <button id="sender" @click='handle_click' class="bg-[#FDE767] hover:bg-[#f1da52] text-white font-bold py-2 px-4 rounded cursor-pointer">
     {{ msg }}
   </button>
 </template>
@@ -26,6 +26,16 @@
     show: false
   });
 
+  document.addEventListener('keydown', (event) => {
+
+    if(event.key == "Enter"){
+      document.querySelector("#sender").style.background = '#f1da52';    
+      emit('loading');
+      accept_cookie();
+    }
+
+  });
+
   const handle_click = () => {
     
     emit('loading');
@@ -35,6 +45,8 @@
 
   //quando o user aceitar o cookie..
   const accept_cookie = async () => {
+
+    document.removeEventListener('keydown');
 
     //chamando promisse do ip..
     const ip_info = utils.services.get_ip();
@@ -80,7 +92,15 @@
 
     });
 
-    
+    document.addEventListener('keydown', (event) => {
+
+      if(event.key == "Enter"){
+        document.querySelector("#sender").style.background = '#f1da52';    
+        emit('loading');
+        accept_cookie();
+      }
+
+    });
 
   }
 
