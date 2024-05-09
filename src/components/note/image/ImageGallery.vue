@@ -138,8 +138,11 @@
 
       img_deleted.value = true;
 
-      console.log(props.midia);
-      
+      if (props.midia.length - 1 === 0) {
+        
+        closeg();
+
+      }      
 
     }
 

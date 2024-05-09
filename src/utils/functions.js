@@ -110,20 +110,6 @@ const utils = {
   
     },
 
-    async generate_thumnail(){
-
-      const cld = new Cloudinary(
-        {
-          cloud: {
-            cloudName: 'derwjxngh'
-          }
-        }
-      );
-
-      
-
-    }
-
   },
 
   //API LARAVEL

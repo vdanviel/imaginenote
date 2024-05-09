@@ -2,6 +2,7 @@
 
   <ConfirmModal v-show="confirm_del_img_section" tittle="Tem certeza que deseja excluir todas as imagens?" :loading="deleting_img_section_loading" desc="Todas as imagens atreladas a essa nota serão excluidas permanentemente." @handle="delete_img_section" @close="confirm_del_img_section = false"/>
   <ConfirmModal v-show="confirm_del_video_section" tittle="Tem certeza que deseja excluir todos os vídeos?" :loading="deleting_video_section_loading" desc="Todos os vídeos atrelados a essa nota serão excluidos permanentemente." @handle="delete_video_section" @close="confirm_del_video_section = false"/>
+  <ConfirmModal v-show="confirm_del_audio_section" tittle="Tem certeza que deseja excluir todos os aúdios?" :loading="deleting_audio_section_loading" desc="Todos os aúdios atrelados a essa nota serão excluidos permanentemente." @handle="delete_audio_section" @close="confirm_del_audio_section = false"/>
 
   <div class="flex justify-center mt-[100px]" v-if="loading">
     <Loading/>
@@ -27,10 +28,18 @@
     <VideoSection v-show="has_videos" @delete_section="confirm_del_video_section = true" @show_gallery="show_video_gallery = true" @refresh_section="refresh_video_section" :midia="midia_videos.slice(0, 9)" midia_name="Vídeos" type="video"/>
     <VideoGallery v-show="show_video_gallery" :midia="midia_videos" midia_name="Vídeos" @close="show_video_gallery = false" @refresh_section="refresh_video_section"/>
 
-    <!-- text -->
-    <div contenteditable="true" class="border resize-none rounded-lg px-4 py-2 m-[30px] h-[100vh]" @input="update_text" @change="update_text" id="current_text" v-html="db_text"></div>
+    <!-- audio -->
+    <AudioSection v-show="has_audios" @delete_section="confirm_del_audio_section = true" @show_gallery="show_audio_gallery = true" @refresh_section="refresh_audio_section" :midia="midia_audios.slice(0, 9)" midia_name="Aúdios" type="audio"/>
+    <AudioGallery v-show="show_audio_gallery" :midia="midia_audios" midia_name="Aúdios" @close="show_audio_gallery = false" @refresh_section="refresh_audio_section"/>
 
+    <!-- text -->
+    <p class="mt-5">Texto</p>
+    
+    <div contenteditable="true" class="overflow-hidden border resize-none rounded-lg p-5 mt-5 min-h-[80vh]" @input="update_text" @change="update_text" id="current_text" v-html="db_text"></div>
+
+    <p class="text-slate-400 text-mb text-center p-5">Eu não garanto a segurança de suas mídias. Esta aplicação é uma versão beta e a capacidade de armazenamento de nuvem do Google Firebase (utilizado na aplicação) é limitada.</p>
   </div>
+  
   
 </template>
 
@@ -47,13 +56,15 @@
   import VideoGallery from "../../components/note/video/VideoGallery.vue";
   //audio
   import AddAudio from "../../components/note/audio/AddAudio.vue";
+  import AudioSection from "../../components/note/audio/AudioSection.vue";
+  import AudioGallery from "../../components/note/audio/AudioGallery.vue";
   //others
   import SavedItem from "../../components/SavedItem.vue";
   import Loading from "../../components/Loading.vue";
   import ConfirmModal from "../../components/alerts/ConfirmModal.vue";
 
   //functions..
-  import { ref, reactive, onBeforeUnmount, onMounted} from 'vue';
+  import { ref, reactive, onBeforeUnmount, onMounted } from 'vue';
   import { useRoute } from "vue-router"; 
   import { user, utils } from "../../utils/functions.js";
   import { firebase } from "../../utils/firebase.js";  
@@ -81,7 +92,11 @@
   const confirm_del_video_section = ref(false);//modal que surge se usuário pede para excluir sessão de iamgens..
   const deleting_video_section_loading = ref(false);
   //midia audio
+  const midia_audios = ref(null);
   const has_audios = ref(false);
+  const show_audio_gallery = ref(false);
+  const confirm_del_audio_section = ref(false);//modal que surge se usuário pede para excluir sessão de iamgens..
+  const deleting_audio_section_loading = ref(false);
 
   //recuperando as ifno da nota no canco e colocando nos v-models..
   utils.imaginenote_api.show_note(route.params.id).then(data => {
@@ -175,6 +190,8 @@
   //salvamento de midia
   const addmidia = async (midia_list) => {
 
+    console.log(midia_list);
+
     unsaved_changes.value = true;//indicanco que solicitçaõ esta sendo feita..
 
     //recuperando info do usuário..
@@ -232,6 +249,37 @@
 
         //caso o v-show da sessão esteja em falso vamos dar true pra ela..
         has_videos.value = true;
+
+      }
+
+      saved.value = false;//escondendo o "salvando..."
+      unsaved_changes.value = false;//solicitação feita, possível fechar site..
+
+    }
+
+    if (midia_list[0].type.indexOf('audio') !== -1) {//audio
+
+      saved.value = true; // Mostra SavedItem
+
+      //criando o caminho onde as imagens vao ficar no google storage..
+      const references = firebase.storage.create_references(midia_list, 'audio', note.id);
+
+      //upando imagens no google storage..
+      const uploaded = await firebase.storage.upload(references, midia_list);
+
+      //esperando a midia ser upada..
+      if (uploaded == true){
+
+        //depois da midia ser upada requisitamos os dados da pasta da midia requisitada do usuário..
+        const audiometadatas = await firebase_audios(pass);
+
+        console.log(audiometadatas);
+
+        //entao o arquivo novo vai estar prsente na pasta da midia e o vue atualizara automaticamnete a sessão da midia requirida no front..
+        midia_audios.value = audiometadatas;
+
+        //caso o v-show da sessão esteja em falso vamos dar true pra ela..
+        has_audios.value = true;
 
       }
 
@@ -386,8 +434,6 @@
       return true;
 
     } catch (error) {
-      
-      console.error(error);
 
       return false;
 
@@ -423,6 +469,96 @@
 
 
   }
+
+  //audio
+  async function firebase_audios(user) {
+
+    try {
+      
+      // Pegando a referência da pasta de audio
+      const audio_path = await firebase.storage.create_reference_by_path(user.email + '/' + 'audio' + '/' + route.params.id);
+
+      // Recuperando as referências de todos os arquivos dentro da pasta de audion
+      let refs_audios = await firebase.storage.list_references_objs(audio_path);
+
+      // Recuperando os metadados desses arquivos
+      const metadatas = await firebase.storage.get_metadatas(refs_audios);
+
+      // Recuperando as URLs desses arquivos
+      const audios_urls = await firebase.storage.get_files(refs_audios);
+
+      // Mapeando os metadados com as URLs correspondentes
+      const metadatas_with_urls = metadatas.map((element, index) => {
+        return Object.assign({ src: audios_urls[index] }, element);
+      });
+
+      // Ordenando os metadados com base no atributo "updated"
+      metadatas_with_urls.sort((a, b) => new Date(b.updated) - new Date(a.updated));
+
+      return metadatas_with_urls;
+
+    } catch (error) {
+
+      console.error('error-imaginenote:', error);
+      return false;
+
+    }
+
+  }
+
+  const delete_audio_section = async () => {
+
+    //loading aparece na sessão sendo deletada
+    deleting_audio_section_loading.value = true;
+
+    //recuperando info do usuário..
+    const pass = await user();
+
+    // Pegando a referência da pasta de audio
+    const audio_path = await firebase.storage.create_reference_by_path(pass.email + '/' + 'audio' + '/' + route.params.id);
+
+    // Recuperando as referências de todos os arquivos dentro da pasta de audions
+    let refs_audios = await firebase.storage.list_references_objs(audio_path);
+
+    //pega todas as referencias das audions dessa nota e exclui elas..
+    await firebase.storage.delete(refs_audios);
+
+    //some com o a sessão de audions..
+    has_audios.value = false;
+
+    //loading false para que na proxima vez q add a sessão..
+    deleting_audio_section_loading.value = false;
+
+    //some com o modal de confirmação de exlusão da sessão de audions..
+    confirm_del_audio_section.value = false;
+
+  }
+
+  const refresh_audio_section = async () => {
+
+    try {
+      
+      const pass = await user();
+
+      const audiometadatas = await firebase_audios(pass);
+
+      if(audiometadatas.length == 0) has_audios.value = false;
+
+      midia_audios.value = audiometadatas;
+
+      
+
+      return true;
+
+    } catch (error) {
+      
+      console.error(error);
+
+      return false;
+
+    }
+    
+  }
   
   //carregando midias ao entrar na pagina..
   onMounted(async () => {
@@ -445,10 +581,18 @@
     } else {
       has_videos.value = true;
     }
+    //audios
+    const audiometadatas = await firebase_audios(pass);
+    if (audiometadatas.length === 0) {
+      has_audios.value = false;
+    } else {
+      has_audios.value = true;
+    }
 
     //definindo dados nos v-models de midia respectivos..
     midia_images.value = imgmetadatas;//imagem
     midia_videos.value = videometadatas;//video
+    midia_audios.value = audiometadatas;//audio
 
     //carregamento da página concluído...
     loading.value = false;

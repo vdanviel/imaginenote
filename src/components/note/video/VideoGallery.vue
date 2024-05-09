@@ -2,42 +2,46 @@
 
   <div @click.self="closeg">
 
+    <!-- Modais de alerta e vídeo -->
     <AlertModal v-show="show_error" tittle="Ocorreu um erro." :desc="error_message" @close="show_error = false"/>
-
-    <!--video gallery-->
     <AlertModal v-show="video_deleted" tittle="Vídeo deletado com sucesso!" desc="" @close="video_deleted = false"/>
-    <ConfirmModal v-show="confirm_del_video" tittle="Tem certeza que deseja deletar esse vídeo?" desc="Esse vídeo será deleto da sua nuvem permanentemente." :loading="deleting_this_video" @handle="delete_video" @close="confirm_del_video = false"/>
+    <ConfirmModal v-show="confirm_del_video" tittle="Tem certeza que deseja deletar esse vídeo?" desc="Esse vídeo será deletado da sua nuvem permanentemente." :loading="deleting_this_video" @handle="delete_video" @close="confirm_del_video = false"/>
     <FullScreenVideo v-show="show_video" :name="open_name" :src="open_src" :size="open_size" @close="close_all" @delete="confirm_del_video = true" />
 
+    <!-- Fundo escuro e contêiner principal -->
     <div class="bg-[#f1eb1a40] z-20 bg-opacity-50 fixed inset-0 overflow-y-auto z-30 flex items-center justify-center">
-      <div class="bg-white rounded-lg p-8 shadow overflow-hidden h-[98%] min-w-[75%]">
+      <div class="bg-white rounded-lg p-8 shadow overflow-hidden h-[98%] w-[75%]">
 
+        <!-- Cabeçalho com título e botão de fechar -->
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-gray-900 text-lg font-medium">{{props.midia_name}}</h2>
-          <button class="text-gray-700 hover:text-gray-900" :onclick="closeg">Fechar</button>
+          <button class="text-gray-700 hover:text-gray-900" @click="closeg">Fechar</button>
         </div>
         
-        <div class="overflow-y-auto max-h-screen">
-          
-          <section class="text-gray-600 body-font">
-            <div class="container px-5 py-24 mx-auto">
-              <div class="grid grid-cols-3 gap-4">
-
-                <!-- Iterar sobre as videons -->
-                <div class="block relative h-48 rounded overflow-hidden" v-for="(item, index) in props.midia" :key="index">
-                  <Video class="object-cover object-center w-full h-full block"  @show="display_video" :video_name="item.name" :video_src="item.src" :video_b="item.size" :video_type="item.contentType"/>
-                </div>
-                
-
+        <!-- Galeria de vídeos -->
+        <div class="grid grid-cols-3 gap-4">
+          <!-- Iterar sobre os vídeos -->
+          <div v-for="(item, index) in props.midia" :key="index" class="relative rounded overflow-hidden shadow-md">
+            <!-- Componente de vídeo -->
+            <Video class="object-cover w-full h-40" @show="display_video" :video_name="item.name" :video_src="item.src" :video_b="item.size" :video_type="item.contentType"/>
+            <!-- Informações sobre o vídeo -->
+            <div class="p-4 bg-white">
+              <div class="flex gap-2 mb-2">
+                <p class="text-gray-600 text-xs ">{{ item.contentType.substr(item.contentType.indexOf('/') + 1, item.contentType.length).toUpperCase() }}</p>
+                <p class="text-gray-600 text-xs">{{ format_date(item.timeCreated) }}</p>
               </div>
+              <h3 class="text-gray-900 text-sm font-bold truncate mb-2">{{ item.name.replace('.mov', '').replace('.mp4', '').replace('.mkv', '') }}</h3>
+              
+              <p class="bg-fde767 w-fit bg-[#fde767] px-4 py-2 font-bold text-white ">{{ bytes_to_size(item.size)}}</p>
             </div>
-          </section>
-
+          </div>
         </div>
+
       </div>
     </div>
-
   </div>
+
+
 
 </template>
 
@@ -120,10 +124,45 @@
 
       video_deleted.value = true;
 
+      if (props.midia.length - 1 === 0) {
+        
+        closeg();
+
+      }
+
     }
+
+
 
     deleting_this_video.value = false;
 
+  }
+
+    // Método para formatar a data
+  const format_date = (dateString) => {
+
+      let date = new Date(dateString);
+
+      let day = date.getDate().toString().length == 1 ? "0" + date.getDate().toString() : date.getDate().toString();
+
+      //No JavaScript, os meses são indexados a partir de zero, o que significa que janeiro é representado como 0, fevereiro como 1, e assim por diante até dezembro que é representado como 11.
+      let adjusted_mounth =  date.getMonth() + 1;
+
+      let mount = adjusted_mounth.toString().length == 1 ? "0" + adjusted_mounth.toString() : adjusted_mounth.toString();
+      let year = date.getFullYear().toString().length == 1 ? "0" + date.getFullYear().toString() : date.getFullYear().toString();
+
+      let hour = date.getHours().toString().length == 1 ? "0" + date.getHours().toString() : date.getHours().toString();
+      let minute = date.getMinutes().toString().length == 1 ? "0" + date.getMinutes().toString() : date.getMinutes().toString();
+
+      return `${day}/${mount}/${year} ás ${hour}:${minute}`
+
+  };
+
+  function bytes_to_size(bytes) {
+    const sizes = ['bytes', 'kb', 'mb', 'gb', 'tb'];
+    if (bytes === 0) return '0 Byte';
+    const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+    return Math.round(bytes / Math.pow(1024, i), 2) + sizes[i];
   }
 
 </script>

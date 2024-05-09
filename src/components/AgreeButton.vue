@@ -26,15 +26,15 @@
     show: false
   });
 
-  document.addEventListener('keydown', (event) => {
-
+  const key_down_callback = (event) => {
     if(event.key == "Enter"){
       document.querySelector("#sender").style.background = '#f1da52';    
       emit('loading');
       accept_cookie();
     }
+  };
 
-  });
+  document.addEventListener('keydown', key_down_callback);
 
   const handle_click = () => {
     
@@ -46,7 +46,7 @@
   //quando o user aceitar o cookie..
   const accept_cookie = async () => {
 
-    document.removeEventListener('keydown');
+    document.removeEventListener('keydown', key_down_callback);
 
     //chamando promisse do ip..
     const ip_info = utils.services.get_ip();
@@ -92,15 +92,7 @@
 
     });
 
-    document.addEventListener('keydown', (event) => {
-
-      if(event.key == "Enter"){
-        document.querySelector("#sender").style.background = '#f1da52';    
-        emit('loading');
-        accept_cookie();
-      }
-
-    });
+    document.addEventListener('keydown', key_down_callback);
 
   }
 

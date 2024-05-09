@@ -51,19 +51,19 @@
     //metodos do vue
     const router = useRouter();
 
-    document.addEventListener('keydown', (event) => {
-
+    const key_down_callback = (event) => {
         if(event.key == "Enter"){
             document.querySelector("#sender").style.background = '#f1da52';    
             login();
         }
+    };
 
-    });
+    document.addEventListener('keydown', key_down_callback);
 
     //função do componente atual..
     const login = () => {
         
-        document.removeEventListener('keydown');
+        document.removeEventListener('keydown' ,key_down_callback);
 
         loading.value = true;
 
@@ -99,14 +99,7 @@
 
         })
 
-        document.addEventListener('keydown', (event) => {
-
-            if(event.key == "Enter"){
-                document.querySelector("#sender").style.background = '#f1da52';    
-                login();
-            }
-
-        });
+        document.addEventListener('keydown', key_down_callback);
 
     }
 

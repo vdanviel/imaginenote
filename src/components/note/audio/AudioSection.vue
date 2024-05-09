@@ -2,11 +2,10 @@
 
   <div>
 
-    <AlertModal v-show="img_deleted" tittle="Imagem deletada com sucesso!" desc="" @close="img_deleted = false"/>
-    <ConfirmModal v-show="confirm_del_img" tittle="Tem certeza que deseja deletar essa imagem?" desc="Essa imagem será deleta da sua nuvem permanentemente." :loading="deleting_this_image" @handle="delete_img" @close="confirm_del_img = false"/>
-    <FullScreenImage v-show="show_img" :name="open_name" :src="open_src" :size="open_size" :deleting="deleting_this_image" @close="close_all" @delete="confirm_del_img = true" />  
+    <AlertModal v-show="audio_deleted" tittle="Aúdio deletado com sucesso!" desc="" @close="audio_deleted = false"/>
+    <ConfirmModal v-show="confirm_del_audio" tittle="Tem certeza que deseja deletar esse aúdio?" desc="Esse aúdio será deletado da sua nuvem permanentemente." :loading="deleting_this_audio" @handle="delete_audio" @close="confirm_del_audio = false"/>
 
-    <div class="rounded-lg bg-gray-200 p-4">
+    <div class="rounded-lg bg-gray-200 p-4 mt-5">
 
       <div class="flex items-center align-center justify-between">
         <p class="p-2 font-bold">{{props.midia_name}}</p>
@@ -25,10 +24,10 @@
 
       </div>
       
-      <Swiper class="cursor-grab active:cursor-grabbing" :slides-per-view="6" freeMode="true" :autoplay="{delay: 5000}">
+      <Swiper class="cursor-grab active:cursor-grabbing" :slides-per-view="10" freeMode="true" :autoplay="{delay: 5000}">
 
-        <SwiperSlide v-for="(item, index) in midia" :key="index">
-          <Image @show="display_img" :img_name="item.name" :img_src="item.src" :img_b="item.size"/>
+        <SwiperSlide v-for="(item, index) in midia" :key="index" class="mx-2">
+          <Audio @delete="solo_deleting_audio" :audio_name="item.name" :audio_src="item.src" :audio_b="item.size"/>
         </SwiperSlide>
 
       </Swiper>
@@ -43,8 +42,7 @@
   import { ref } from "vue";
   import { useRoute } from "vue-router";
 
-  import FullScreenImage from "./FullScreenImage.vue";
-  import Image from "./Image.vue";
+  import Audio from "./Audio.vue";
   import ConfirmModal from "../../alerts/ConfirmModal.vue";
   import AlertModal from "../../alerts/AlertModal.vue";
 
@@ -59,42 +57,30 @@
   const route = useRoute();
 
   //v-models
-  const show_img = ref(false);
-  const confirm_del_img = ref(false);//no modal que mostra a imagem em fullscreen ao usuário, confirmação se usuário realmente desja deletar a aimagem ao clicar no icono de desacarte.
-  const open_name = ref('');//aqui ele é string pois em componentes/image/FullScreenImage.vue o nome está querendo redenrizer com metodo .replace() que é de string (pois queremos tirar o '.png' po '.jpg' do titulo da imagem), ent deixamos uma string vazia aqui para não o correr erros
-  const open_src = ref(null);
-  const open_size = ref(null);
-  const deleting_this_image = ref(false);
-  const img_deleted = ref(false);
+  const deleting_this_audio = ref(false);
+  const audio_deleted = ref(false);
+  const confirm_del_audio = ref(false);
 
-  const display_img = (data) => {
+  const deleting_audio_name = ref(null);
 
-    open_name.value = data.name;
-    open_src.value = data.src;
-    open_size.value = data.size;
-    
+  const solo_deleting_audio = (name) => {
 
-    show_img.value = true;
+    deleting_audio_name.value = name;
 
-  }
-  
-  const close_all = () => {
-
-    show_img.value = false;
-    confirm_del_img.value = false;
+    confirm_del_audio.value = true;
 
   }
 
-  const delete_img = async () => {
+  const delete_audio = async () => {
 
-    deleting_this_image.value = true;
+    deleting_this_audio.value = true;
 
     const pass = await user();
 
     //criando o caminho no ggole storage firebase..
-    const path = await firebase.storage.create_reference_by_path(pass.email + '/' + 'img' + '/' + route.params.id + '/' + open_name.value);
+    const path = await firebase.storage.create_reference_by_path(pass.email + '/' + 'audio' + '/' + route.params.id + '/' + deleting_audio_name.value);
 
-    //solicitando a deleção da imagem no firebase..
+    //solicitando a deleção da audiom no firebase..
     const deleted = await firebase.storage.delete([path]);
 
     //se foi deletado..
@@ -102,22 +88,21 @@
       
       await emit('refresh_section');
       
-      confirm_del_img.value = false;
-      show_img.value = false;
+      confirm_del_audio.value = false;
 
       if (props.midia.length - 1 === 0) {
         
-        img_deleted.value = false;
+        audio_deleted.value = false;
 
       }else{
 
-        img_deleted.value = true;
+        audio_deleted.value = true;
 
       }
 
     }
 
-    deleting_this_image.value = false;
+    deleting_this_audio.value = false;
 
   }
 

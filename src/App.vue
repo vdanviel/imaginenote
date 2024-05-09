@@ -14,7 +14,11 @@
 
         <div class="flex space-x-4">
           <router-link v-show="logged" :to="{name:'menu'}" class="rounded-full shadow rounded-[100%] p-3 hover:bg-[#c6c6c6] focus:outline-none mt-[25px] mb-[18px]">
-          <img width="24px" :src="home" alt="Sair">
+          <img width="24px" :src="home" alt="Menu">
+          </router-link>
+
+          <router-link v-show="logged" :to="{name:'about'}" class="rounded-full shadow rounded-[100%] p-3 hover:bg-[#c6c6c6] focus:outline-none mt-[25px] mb-[18px]">
+          <img width="24px" :src="info" alt="Sobre">
           </router-link>
 
           <button v-show="logged" @click="leaving = true" class="rounded-full shadow rounded-[100%] p-3 hover:bg-[#c6c6c6] focus:outline-none mt-[25px] mb-[18px]">
@@ -36,6 +40,7 @@ import { ref, onBeforeMount } from "vue";
 import { utils } from "./utils/functions.js";
 import home from './assets/home.png';
 import exit from './assets/exit.png';
+import info from './assets/info.png';
 
 import ConfirmModal from "./components/alerts/ConfirmModal.vue";
 const leaving = ref(false);

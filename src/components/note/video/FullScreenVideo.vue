@@ -57,6 +57,7 @@
     }
 
     const delete_video = () => {
+        video.value.pause();
         emit('delete');
     }
 

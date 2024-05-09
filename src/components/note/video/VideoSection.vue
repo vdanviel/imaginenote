@@ -106,7 +106,15 @@
       show_video.value = false;
       confirm_del_video.value = false;
 
-      video_deleted.value = true;
+      if (props.midia.length - 1 === 0) {
+        
+        video_deleted.value = false;
+
+      }else{
+
+        video_deleted.value = true;
+
+      }
 
     }
 

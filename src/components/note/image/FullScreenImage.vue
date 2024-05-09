@@ -17,7 +17,7 @@
         <!-- Nome da imagem sobreposta -->
         <p class="absolute left-1/2 top-2 -translate-x-1/2 transform rounded bg-fde767 px-4 py-2 font-bold text-black">{{ props.name }}</p>
 
-        <img class="max-h-[80%] max-w-[80%] p-10" :src="props.src" :alt="props.name" />
+        <img class="max-h-[80%] max-w-[80%] p-10 max-w-screen max-h-screen" :src="props.src" :alt="props.name" />
 
         <!-- Tamanho da imagem -->
         <p class="absolute left-1/2 bottom-4 -translate-x-1/2 transform rounded bg-fde767 px-4 py-2 font-bold text-white bg-[#fde767]">{{ typeof props.size == "number" ? bytes_to_size(props.size) : props.size }}</p><!-- condição ternaria, caso haja contextos em que esse dados seja alientado com o a unidade de mediade de bytes já copilado -->
@@ -32,18 +32,6 @@
 
     const emit = defineEmits(['close', 'delete']);
     const props = defineProps(['name', 'src', 'size']);
-
-    /*
-        document.addEventListener('keydown', function(event) {
-            if (event.key === "Escape") {
-                emit('close');
-            }
-
-            if (event.key === "Delete") {
-                emit('delete');
-            }
-        });
-    */
 
     const close = () => {
         emit('close');
