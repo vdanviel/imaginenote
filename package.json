@@ -13,16 +13,11 @@
     "@cloudinary/url-gen": "^1.19.0",
     "crypto-js": "^4.2.0",
     "firebase": "^10.10.0",
-    "flickity": "^3.0.0",
-    "interactjs": "^1.10.27",
     "swiper": "^11.1.1",
     "vue": "^3.3.11",
     "vue-draggable-resizable": "^3.0.0",
     "vue-router": "^4.2.5",
-    "vue-the-mask": "^0.11.1",
-    "vue3-draggable-resizable": "^1.6.5",
-    "vue3-simple-icons": "^11.0.0",
-    "vuedraggable": "^4.1.0"
+    "vue3-simple-icons": "^11.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",
