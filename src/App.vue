@@ -28,9 +28,11 @@
 
       </nav>
     </header>
+
     <main>
       <router-view/>
     </main>
+
   </body>
 </template>
 

@@ -9,53 +9,35 @@ const router = createRouter({
     {
       path: '/',
       name: 'menu',
-      component: () => import('../views/Menu.vue'),
-      meta: {
-        title: 'ImagineNote',
-        favicon: '../../public/icon.png'
-      }
+      component: () => import('../views/Menu.vue')
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('../views/About.vue'),
-      meta: {
-        title: 'ImagineNote',
-        favicon: '../../public/icon.png'
-      }
+      component: () => import('../views/About.vue')
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/auth/Login.vue'),
-      meta: {
-        title: 'ImagineNote',
-        favicon: '../../public/icon.png'
-      }
+      component: () => import('../views/auth/Login.vue')
     },
     {
       path: '/verify',
       name: 'pin',
-      component: () => import('../views/auth/Pin.vue'),
-      meta: {
-        title: 'ImagineNote',
-        favicon: '../../public/icon.png'
-      }
+      component: () => import('../views/auth/Pin.vue')
     },
     {
       path: '/vizualize/:id',
       name: 'note',
-      component: () => import('../views/note/Note.vue'),
-      meta: {
-        title: 'ImagineNote',
-        favicon: '../../public/icon.png'
-      }
+      component: () => import('../views/note/Note.vue')
     }
   ]
 });
 
 //gerenciamento de acesso de rotas
 router.beforeEach((to, from, next) => {
+
+  document.title = "Imaginote";
 
   const isUserLoggedIn = utils.general.get_cookie('session');
 
