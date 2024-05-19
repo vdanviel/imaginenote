@@ -115,7 +115,7 @@ const utils = {
   //API LARAVEL
   imaginenote_api: {
 
-    rote: 'http://127.0.0.1:8000/api',
+    rote: 'https://imaginenote-api-production.up.railway.app/api',
 
     //user
     async register_user (raw_email, raw_ip, raw_address, raw_country, raw_loc) {
