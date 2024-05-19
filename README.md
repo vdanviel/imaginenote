@@ -11,7 +11,7 @@ O **Imaginenote** é um projeto desenvolvido com o objetivo de permitir aos usu�
 ## Tecnologias Utilizadas
 
 - **Vue.js**: Framework JavaScript para a construção da interface do usuário.
-- **Laravel**: Framework PHP utilizado para a criação da API que alimenta o backend da aplicação ([vdanviel/imaginenote-api](https://duckduckgo.com "vdanviel/imaginenote-api")).
+- **Laravel**: Framework PHP utilizado para a criação da API que alimenta o backend da aplicação ([vdanviel/imaginenote-api](https://github.com/vdanviel/imaginenote-api "vdanviel/imaginenote-api")).
 - **Google Firebase**: Plataforma de desenvolvimento de aplicativos móveis e da web do Google, utilizada para armazenamento e hospedagem de mídias.
 
 ## Fluxo de Funcionamento
