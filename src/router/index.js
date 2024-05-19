@@ -9,27 +9,47 @@ const router = createRouter({
     {
       path: '/',
       name: 'menu',
-      component: () => import('../views/Menu.vue')
+      component: () => import('../views/Menu.vue'),
+      meta: {
+        title: 'ImagineNote',
+        favicon: '../../public/icon.png'
+      }
     },
     {
       path: '/about',
       name: 'about',
-      component: () => import('../views/About.vue')
+      component: () => import('../views/About.vue'),
+      meta: {
+        title: 'ImagineNote',
+        favicon: '../../public/icon.png'
+      }
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/auth/Login.vue')
+      component: () => import('../views/auth/Login.vue'),
+      meta: {
+        title: 'ImagineNote',
+        favicon: '../../public/icon.png'
+      }
     },
     {
       path: '/verify',
       name: 'pin',
-      component: () => import('../views/auth/Pin.vue')
+      component: () => import('../views/auth/Pin.vue'),
+      meta: {
+        title: 'ImagineNote',
+        favicon: '../../public/icon.png'
+      }
     },
     {
       path: '/vizualize/:id',
       name: 'note',
-      component: () => import('../views/note/Note.vue')
+      component: () => import('../views/note/Note.vue'),
+      meta: {
+        title: 'ImagineNote',
+        favicon: '../../public/icon.png'
+      }
     }
   ]
 });
