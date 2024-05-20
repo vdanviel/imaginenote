@@ -35,7 +35,7 @@
     <!-- text -->
     <p class="mt-5">Texto</p>
     
-    <div contenteditable="true" class="overflow-hidden border resize-none rounded-lg p-5 mt-5 min-h-[80vh]" @input="update_text" @change="update_text" id="current_text" v-html="db_text"></div>
+    <div contenteditable="true" class="overflow-hidden overflow-y-auto border resize-none rounded-lg p-5 mt-5 min-h-[80vh]" @input="update_text" @change="update_text" id="current_text" v-html="db_text"></div>
 
     <p class="text-slate-400 text-mb text-center p-5">Eu não garanto a segurança de suas mídias. Esta aplicação é uma versão beta e a capacidade de armazenamento de nuvem do Google Firebase (utilizado na aplicação) é limitada.</p>
   </div>
