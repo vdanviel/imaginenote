@@ -5,7 +5,7 @@
 
             <div class="flex flex-col text-center w-full mb-20">
                 <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Acesse suas anotações</h1>
-                <p class="lg:w-2/3 mx-auto leading-relaxed text-base">Whatever cardigan tote bag tumblr hexagon brooklyn asymmetrical gentrify, subway tile poke farm-to-table. Franzen you probably haven't heard of them.</p>
+                <p class="lg:w-2/3 mx-auto leading-relaxed text-base">Quando você criar uma anotação ela ficará aqui. Lembre que o Imaginenote é uma aplicação beta. Se encontrar qualquer tipo de erro me contate.</p>
             </div>
 
             <div>
