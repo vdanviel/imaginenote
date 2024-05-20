@@ -48,49 +48,49 @@
   //quando o user aceitar o cookie..
   const accept_cookie = async () => {
 
+    /*ABOLIDO..
+      //chamando promisse do ip..
+      //const ip_info = utils.services.get_ip();
+      
+      //utilizando o 'data' para definir as informações do usuario registrado / logado..
+      //ip_info.then(data => {});
+    */
+
     document.removeEventListener('keydown', key_down_callback);
 
-    //chamando promisse do ip..
-    const ip_info = utils.services.get_ip();
-    
-    //utilizando o 'data' para definir as informações do usuario registrado / logado..
-    ip_info.then(data => {
+    //registrando o user (será enviado o email para ele)
+    let register = utils.imaginenote_api.register_user(prop.email, '0.0.0.0', 'none', 'none', 'none');
 
-      //registrando o user (será enviado o email para ele)
-      let register = utils.imaginenote_api.register_user(prop.email, data.ip, data.city, data.country, data.loc);
+    //chamando evento emit 'agreed_cookie'..
+    register.then(data => {
 
-      //chamando evento emit 'agreed_cookie'..
-      register.then(data => {
+      emit('disagreed');
+
+      let json = data;
+
+      if(data == false){
+        state.error = "Houve um erro de conexão."
+        state.show = true;
+        emit('disagreed');
+      }
+
+      if (json.error) {
+
+        if(typeof json.error.validator != 'undefined'){
+          //O método Object.values(meuObjeto) retorna um array com os valores do objeto
+          state.error = Object.values(json.error.validator.customMessages)[0];
+        }else{
+          state.error = json.error;
+        }
 
         emit('disagreed');
+        state.show = true;
+      }
 
-        let json = data;
-
-        if(data == false){
-          state.error = "Houve um erro de conexão."
-          state.show = true;
-          emit('disagreed');
-        }
-
-        if (json.error) {
-
-          if(typeof json.error.validator != 'undefined'){
-            //O método Object.values(meuObjeto) retorna um array com os valores do objeto
-            state.error = Object.values(json.error.validator.customMessages)[0];
-          }else{
-            state.error = json.error;
-          }
-
-          emit('disagreed');
-          state.show = true;
-        }
-
-        
+      
       if (typeof json.new_user != 'undefined' || typeof json.existing_user != 'undefined') {
         router.push({name:'pin'})
       }
-
-      })
 
     });
 
