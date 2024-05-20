@@ -36,10 +36,12 @@
 
   document.addEventListener('keydown', key_down_callback);
 
-  const handle_click = () => {
-    
+  const handle_click = async (e) => {
+
     emit('loading');
-    accept_cookie();
+    e.currentTarget.disabled = true;
+    await accept_cookie();
+    e.currentTarget.disabled = false;
     
   }
 
