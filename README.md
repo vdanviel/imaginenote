@@ -26,6 +26,3 @@ O **Imaginenote** é um projeto desenvolvido com o objetivo de permitir aos usu�
 ## Conclusão
 
 O **Imaginenote** oferece uma maneira conveniente e segura para os usuários organizarem suas anotações, enriquecendo-as com mídias como áudio, vídeo e imagem. Ao integrar-se ao Firebase para o armazenamento das mídias e ao Laravel para o backend da aplicação, o projeto garante um fluxo eficiente e confiável para salvar e recuperar informações. Além disso, a integração com APIs externas permite uma experiência ainda mais personalizada, fornecendo dados contextuais relevantes para as anotações dos usuários.
-
-## Site
-Se você deseja acessar a aplicação, ela deve estar no ar em [https://imaginenote.web.app](https://imaginenote.web.app "https://imaginenote.web.app").
